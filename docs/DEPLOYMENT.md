@@ -295,7 +295,7 @@ via `codespaces.mindpods.org/signup` or the seed script, depending on its mode.)
 - [x] A3 prod Dockerfile (from mind-drive) — `+ .dockerignore`
 - [x] A4 `release.yml` (IMAGE_NAME=mind-chat, chat build-args)
 - [x] A4 Actions permissions — none needed (workflow's own `permissions:` block suffices)
-- [~] A5 local build green ✅ → still need: `git init` + GitHub remote → tag `v0.1.0` → grab digest
+- [x] A5 released v0.1.0 → `ghcr.io/mind-studio/mind-chat@sha256:6a2b56ba297e4b8ca239debaf5458120362253e746234f6b3a2b469e7c42e5d1`
 - [ ] B1 `MIND_DOMAIN_CHAT` in `.env(.example)`
 - [ ] B2 `chat` service + caddy `depends_on` + env passthrough
 - [ ] B3 Caddy vhost
