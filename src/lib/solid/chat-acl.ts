@@ -10,12 +10,18 @@ import type { AuthenticatedFetch } from "./chat";
  * In WAC, `acl:default` makes the auth apply to children; `acl:accessTo`
  * makes it apply to the resource itself. We use both so a member can read
  * the container AND the day files inside it.
+ *
+ * `options.authenticatedAppend` adds an `acl:AuthenticatedAgent` grant so
+ * any signed-in WebID can Read+Append — the "shared demo room" model used
+ * by the live chat.mindpods.org room, where visitors post as themselves
+ * rather than as a named persona.
  */
 export async function writeRoomAcl(
   roomUrl: string,
   ownerWebid: string,
   memberWebids: readonly string[],
   fetch: AuthenticatedFetch,
+  options: { authenticatedAppend?: boolean } = {},
 ): Promise<void> {
   const containerUrl = roomUrl.endsWith("/") ? roomUrl : `${roomUrl}/`;
   const aclUrl = `${containerUrl}.acl`;
@@ -29,6 +35,17 @@ export async function writeRoomAcl(
   acl:mode acl:Read, acl:Append.`,
   );
 
+  const authenticated = options.authenticatedAppend
+    ? `<#authenticated>
+  a acl:Authorization;
+  acl:agentClass acl:AuthenticatedAgent;
+  acl:accessTo <./>;
+  acl:default <./>;
+  acl:mode acl:Read, acl:Append.`
+    : "";
+
+  const blocks = [members.join("\n\n"), authenticated].filter(Boolean);
+
   const ttl = `@prefix acl: <http://www.w3.org/ns/auth/acl#>.
 
 <#owner>
@@ -38,7 +55,7 @@ export async function writeRoomAcl(
   acl:default <./>;
   acl:mode acl:Read, acl:Write, acl:Append, acl:Control.
 
-${members.join("\n\n")}
+${blocks.join("\n\n")}
 `;
 
   const res = await fetch(aclUrl, {

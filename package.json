@@ -1,6 +1,6 @@
 {
   "name": "mind-chat-v0",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3030",
@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
     "seed:demo": "tsx scripts/seed-demo.ts",
+    "fix:acl": "tsx scripts/fix-room-acl.ts",
     "smoke:pods": "tsx scripts/smoke-pods.ts",
     "smoke:roundtrip": "tsx scripts/smoke-roundtrip.ts",
     "smoke:ui": "tsx scripts/smoke-ui.ts",

@@ -35,8 +35,14 @@ async function main(): Promise<void> {
   console.log("seed-demo: ensuring room descriptor");
   await ensureRoom(env.roomUrl, "General", env.personaA.webId, ownerFetch);
 
-  console.log("seed-demo: writing ACL granting", env.personaB.webId, "read+append");
-  await writeRoomAcl(env.roomUrl, env.personaA.webId, [env.personaB.webId], ownerFetch);
+  console.log(
+    "seed-demo: writing ACL granting",
+    env.personaB.webId,
+    "+ any authenticated agent read+append",
+  );
+  await writeRoomAcl(env.roomUrl, env.personaA.webId, [env.personaB.webId], ownerFetch, {
+    authenticatedAppend: true,
+  });
 
   console.log("seed-demo: ensuring today's chat file exists");
   await ensureTodayFile(env.roomUrl, ownerFetch);
