@@ -131,8 +131,11 @@ build-args: |
 
 - the summary block to emit `MIND_CHAT_IMAGE=…@sha256:…`.
 
-Repo settings: **Actions → Workflow permissions → read+write** (so `GITHUB_TOKEN`
-can push the GHCR package and install `@mind-studio/*`).
+Repo settings: **no change needed.** The repo's default workflow permissions can
+stay at `read` — `release.yml` declares its own `permissions: { contents: read,
+packages: write }` block, which grants `GITHUB_TOKEN` the GHCR-push + package-read
+scopes regardless of the repo default. (Verified against `MIND-Studio/builder`,
+which ships images with `default_workflow_permissions: read`.)
 
 ### A5. Build + verify locally before tagging
 
@@ -291,7 +294,7 @@ via `codespaces.mindpods.org/signup` or the seed script, depending on its mode.)
 - [x] A2 collapse `NEXT_PUBLIC_OIDC_ISSUER` → `NEXT_PUBLIC_SOLID_ISSUER`
 - [x] A3 prod Dockerfile (from mind-drive) — `+ .dockerignore`
 - [x] A4 `release.yml` (IMAGE_NAME=mind-chat, chat build-args)
-- [ ] A4 enable read+write Actions permissions on the repo
+- [x] A4 Actions permissions — none needed (workflow's own `permissions:` block suffices)
 - [~] A5 local build green ✅ → still need: `git init` + GitHub remote → tag `v0.1.0` → grab digest
 - [ ] B1 `MIND_DOMAIN_CHAT` in `.env(.example)`
 - [ ] B2 `chat` service + caddy `depends_on` + env passthrough
