@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/solid/session";
 import {
@@ -39,6 +39,18 @@ export default function ChatPage() {
   const [now, setNow] = useState<number>(() => Date.now());
 
   const subRef = useRef<SubscriptionHandle | null>(null);
+
+  // Everyone the room knows about — explicit members (owner-only ACL read),
+  // plus the room creator, self, and anyone who has posted. Drives both
+  // @mention rendering and the composer's autocomplete.
+  const knownWebids = useMemo(() => {
+    const s = new Set<string>();
+    for (const w of members) s.add(w);
+    if (meta?.creator) s.add(meta.creator);
+    if (webid) s.add(webid);
+    for (const m of messages) s.add(m.author);
+    return Array.from(s);
+  }, [members, meta?.creator, webid, messages]);
 
   useEffect(() => {
     if (!loading && !loggedIn) router.replace("/");
@@ -241,13 +253,14 @@ export default function ChatPage() {
         <MessageList
           messages={messages}
           selfWebid={webid}
+          knownWebids={knownWebids}
           now={now}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onReact={handleReact}
         />
 
-        <Composer onSend={handleSend} disabled={!authFetch} />
+        <Composer onSend={handleSend} disabled={!authFetch} members={knownWebids} />
       </section>
     </main>
   );

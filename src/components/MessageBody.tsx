@@ -6,13 +6,25 @@ import React from "react";
  *   - Inline code with single backticks → <code>
  *   - **bold**, __bold__ → <strong>
  *   - *italic*, _italic_ → <em>
+ *   - @mentions → linked chip (resolved against the room's known handles)
  *   - Bare http(s) URLs → <a target="_blank" rel="noopener noreferrer nofollow">
  *
  * Output is plain React (no dangerouslySetInnerHTML), so user content can't
- * inject HTML. Markdown precedence: code spans > bold > italic > urls.
+ * inject HTML. Markdown precedence: code spans > bold > italic > mentions > urls.
  */
-export function MessageBody({ body }: { body: string }): React.JSX.Element {
+export function MessageBody({
+  body,
+  mentions,
+  selfHandle,
+}: {
+  body: string;
+  /** Lowercased handle → WebID for everyone the room knows about. */
+  mentions?: Map<string, string>;
+  /** Current user's handle, so `@you` mentions can be highlighted distinctly. */
+  selfHandle?: string | null;
+}): React.JSX.Element {
   const blocks = parseBlocks(body);
+  const ctx: MentionCtx = { mentions, selfHandle: selfHandle?.toLowerCase() ?? null };
   return (
     <>
       {blocks.map((b, i) => {
@@ -28,13 +40,15 @@ export function MessageBody({ body }: { body: string }): React.JSX.Element {
         }
         return (
           <p key={i} className="whitespace-pre-wrap break-words leading-relaxed">
-            {renderInline(b.body)}
+            {renderInline(b.body, ctx)}
           </p>
         );
       })}
     </>
   );
 }
+
+type MentionCtx = { mentions?: Map<string, string>; selfHandle: string | null };
 
 type Block = { kind: "p"; body: string } | { kind: "code"; lang: string; body: string };
 
@@ -86,10 +100,10 @@ function parseBlocks(text: string): Block[] {
 // 6: italic(_) — guarded with word-boundary lookarounds so identifiers
 //    like `my_var_name` aren't broken into `my [em]var[/em] name`. Markdown
 //    convention: `_italic_` requires non-word context on both sides.
-// 7: url
-const INLINE_RE = /(`[^`]+`)|(\*\*\*[^*]+\*\*\*)|(\*\*[^*]+\*\*)|(__[^_]+__)|(\*[^*\s](?:[^*]*[^*\s])?\*)|((?<![A-Za-z0-9])_[^_\s](?:[^_]*[^_\s])?_(?![A-Za-z0-9]))|(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]])/g;
+// 7: url  8: @mention (must agree with MENTION_RE in lib/util/mentions.ts)
+const INLINE_RE = /(`[^`]+`)|(\*\*\*[^*]+\*\*\*)|(\*\*[^*]+\*\*)|(__[^_]+__)|(\*[^*\s](?:[^*]*[^*\s])?\*)|((?<![A-Za-z0-9])_[^_\s](?:[^_]*[^_\s])?_(?![A-Za-z0-9]))|(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]])|((?<![\w@])@[A-Za-z0-9][A-Za-z0-9._-]*)/g;
 
-function renderInline(text: string): React.ReactNode[] {
+function renderInline(text: string, ctx: MentionCtx): React.ReactNode[] {
   const out: React.ReactNode[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
@@ -152,6 +166,32 @@ function renderInline(text: string): React.ReactNode[] {
           {matched}
         </a>,
       );
+    } else if (m[8]) {
+      // @mention. Resolve against the room's known handles; an unresolved
+      // handle stays plain text so stray "@" usage isn't falsely highlighted.
+      const handleKey = matched.slice(1).toLowerCase();
+      const webid = ctx.mentions?.get(handleKey);
+      if (webid) {
+        const isSelf = ctx.selfHandle === handleKey;
+        out.push(
+          <a
+            key={`m${i++}`}
+            href={webid}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={webid}
+            className={
+              isSelf
+                ? "rounded px-1 font-semibold text-[color:var(--magenta)] bg-[color:var(--magenta-soft)] hover:underline"
+                : "rounded px-1 font-medium text-[color:var(--cyan)] bg-[color:var(--cyan-soft)] hover:underline"
+            }
+          >
+            {matched}
+          </a>,
+        );
+      } else {
+        out.push(matched);
+      }
     }
     last = m.index + matched.length;
   }

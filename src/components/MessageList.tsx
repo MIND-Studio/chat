@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@mind-studio/ui";
 import { REACTION_EMOJI, type ChatMessage } from "@/lib/solid/chat";
 import { absoluteTime, colorForKey, relativeTime, shortName } from "@/lib/util/format";
+import { buildHandleMap } from "@/lib/util/mentions";
 import { Avatar } from "./Avatar";
 import { MessageBody } from "./MessageBody";
 
@@ -13,6 +14,7 @@ const STICK_TO_BOTTOM_SLACK = 80;
 export function MessageList({
   messages,
   selfWebid,
+  knownWebids,
   now,
   onEdit,
   onDelete,
@@ -20,12 +22,23 @@ export function MessageList({
 }: {
   messages: ChatMessage[];
   selfWebid: string | null;
+  /** Everyone the room knows about — used to resolve @mentions in bodies. */
+  knownWebids?: readonly string[];
   now: number;
   onEdit?: (m: ChatMessage, newBody: string) => Promise<void>;
   onDelete?: (m: ChatMessage) => Promise<void>;
   onReact?: (m: ChatMessage, emoji: string) => Promise<void>;
 }): React.JSX.Element {
   const [pickerForUrl, setPickerForUrl] = useState<string | null>(null);
+  // Resolve @mentions against the union of known members and message authors,
+  // so a mention of someone who has posted resolves even before the (owner-
+  // only) member list loads.
+  const mentionMap = useMemo(() => {
+    const all = new Set<string>(knownWebids ?? []);
+    for (const m of messages) all.add(m.author);
+    return buildHandleMap(all);
+  }, [knownWebids, messages]);
+  const selfHandle = selfWebid ? shortName(selfWebid) : null;
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stickRef = useRef(true);
   const [editingUrl, setEditingUrl] = useState<string | null>(null);
@@ -160,7 +173,7 @@ export function MessageList({
                       data-testid="message-body"
                       className="min-w-0 break-words text-sm"
                     >
-                      <MessageBody body={m.body} />
+                      <MessageBody body={m.body} mentions={mentionMap} selfHandle={selfHandle} />
                     </div>
                     {onEdit || onDelete || onReact ? (
                       <div className="hidden shrink-0 items-center gap-1 self-start group-hover:flex">
