@@ -41,25 +41,52 @@ export function MessageList({
   const selfHandle = selfWebid ? shortName(selfWebid) : null;
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stickRef = useRef(true);
+  const prevLenRef = useRef(messages.length);
   const [editingUrl, setEditingUrl] = useState<string | null>(null);
+  // Count of messages that arrived while the reader was scrolled away from the
+  // bottom — surfaced as a "jump to latest" pill so new transmissions aren't
+  // missed without yanking the viewport. Cleared once the reader is back at
+  // the bottom (either by scrolling there or via the pill).
+  const [unseen, setUnseen] = useState(0);
+  const hasMessages = messages.length > 0;
 
+  // Re-bind on the empty→list transition: the scroller div only exists once
+  // there are messages, so a one-shot `[]` effect would attach to the stale
+  // empty-state node and never track the real scroller.
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
     function onScroll() {
       if (!el) return;
       const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-      stickRef.current = distFromBottom < STICK_TO_BOTTOM_SLACK;
+      const stuck = distFromBottom < STICK_TO_BOTTOM_SLACK;
+      stickRef.current = stuck;
+      if (stuck) setUnseen((u) => (u === 0 ? u : 0));
     }
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [hasMessages]);
 
   useEffect(() => {
-    if (stickRef.current && scrollerRef.current) {
-      scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+    const added = Math.max(0, messages.length - prevLenRef.current);
+    prevLenRef.current = messages.length;
+    if (stickRef.current) {
+      if (scrollerRef.current) {
+        scrollerRef.current.scrollTop = scrollerRef.current.scrollHeight;
+      }
+      setUnseen((u) => (u === 0 ? u : 0));
+    } else if (added > 0) {
+      setUnseen((u) => u + added);
     }
   }, [messages]);
+
+  function jumpToLatest() {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    stickRef.current = true;
+    setUnseen(0);
+  }
 
   if (messages.length === 0) {
     return (
@@ -80,12 +107,13 @@ export function MessageList({
   }
 
   return (
-    <div
-      ref={scrollerRef}
-      className="flex-1 overflow-y-auto px-4 py-4"
-      data-testid="message-list"
-    >
-      <ul className="flex flex-col gap-0.5">
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div
+        ref={scrollerRef}
+        className="flex-1 overflow-y-auto px-4 py-4"
+        data-testid="message-list"
+      >
+        <ul className="flex flex-col gap-0.5">
         {messages.map((m, i) => {
           const prev = i > 0 ? messages[i - 1] : undefined;
           const newGroup =
@@ -289,7 +317,19 @@ export function MessageList({
             </li>
           );
         })}
-      </ul>
+        </ul>
+      </div>
+      {unseen > 0 ? (
+        <button
+          type="button"
+          onClick={jumpToLatest}
+          data-testid="jump-to-latest"
+          className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-[color:var(--cyan)] bg-[color:var(--glass-strong)] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-[color:var(--cyan)] shadow-[var(--glow-cyan)] backdrop-blur-md transition hover:bg-[color:var(--cyan-soft)]"
+        >
+          <span aria-hidden>↓</span>
+          {unseen} new {unseen === 1 ? "message" : "messages"}
+        </button>
+      ) : null}
     </div>
   );
 }
