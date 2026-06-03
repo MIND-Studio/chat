@@ -1,0 +1,40 @@
+{
+  "name": "mind-chat-v0",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3030",
+    "build": "next build",
+    "start": "next start --port 3030",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "smoke:pods": "tsx scripts/smoke-pods.ts",
+    "smoke:roundtrip": "tsx scripts/smoke-roundtrip.ts",
+    "smoke:ui": "tsx scripts/smoke-ui.ts",
+    "chat:watch": "tsx scripts/chat-watch.ts",
+    "chat:send": "tsx scripts/chat-send.ts"
+  },
+  "dependencies": {
+    "@inrupt/solid-client": "^3.0.0",
+    "@inrupt/solid-client-authn-browser": "^4.0.0",
+    "@inrupt/solid-client-authn-node": "^3.1.1",
+    "@inrupt/solid-client-notifications": "^4.0.0",
+    "@mind-studio/core": "^0.1.1",
+    "@mind-studio/ui": "^0.1.0",
+    "dotenv": "^17.4.2",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.19.41",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "playwright": "^1.60.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.22.3",
+    "typescript": "^5"
+  }
+}

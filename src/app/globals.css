@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+/* @mind-studio/ui design system — the shared Mind brand tokens, used by every
+   primitive (Button, Dialog, DropdownMenu, …). Direct path (not the
+   "@mind-studio/ui/styles.css" exports subpath) so Tailwind v4's CSS @import
+   resolver finds it on disk. `@source` makes Tailwind emit the utility classes
+   used INSIDE the dist components. */
+@import "../../node_modules/@mind-studio/ui/dist/styles.css";
+@source "../../node_modules/@mind-studio/ui/dist";
+
+/* @mind-studio/core login card styles. The packaged MindLoginCard.js no
+   longer self-imports its CSS (the old tarball did), so the consumer pulls it
+   in. The card themes off its `accent` prop via `--mind-accent`. */
+@import "../../node_modules/@mind-studio/core/dist/login-card.css";
+
+/* ------------------------------------------------------------------ */
+/*  Mind brand bridge                                                  */
+/*                                                                     */
+/*  Mind Chat now rides the shared @mind-studio/ui design system (the   */
+/*  flagship "mind" brand, with "deepspace" preserved as an opt-in      */
+/*  glassy/cyan brand — see src/lib/theme/deepspace.ts + the            */
+/*  [data-mind-theme="deepspace"] block below). The bespoke             */
+/*  bg/glass/cyan/text palette is gone; the old token NAMES survive     */
+/*  only as a thin compatibility shim that resolves to @mind-studio/ui's */
+/*  semantic alias tokens. So every existing `var(--cyan)` /            */
+/*  `text-[color:var(--text-muted)]` class in the app instantly renders */
+/*  in the active Mind / Deep-Space palette, and light / dark / brand   */
+/*  all flow through <ThemeProvider> (next-themes).                     */
+/*                                                                      */
+/*  NOTE: `--border` is the one name chat shares with the design        */
+/*  system, so it is intentionally NOT redefined here — chat's          */
+/*  `var(--border)` classes pick up the active brand's --border         */
+/*  directly.                                                           */
+/* ------------------------------------------------------------------ */
+:root {
+  /* surfaces */
+  --bg-0: var(--background);
+  --bg-1: var(--card);
+  --bg-2: var(--muted);
+  --glass: var(--card);
+  --glass-2: var(--secondary);
+  --glass-strong: var(--popover);
+  --surface-2: var(--secondary);
+  --border-strong: var(--input);
+
+  /* text */
+  --text: var(--foreground);
+  --text-muted: var(--muted-foreground);
+  --text-faint: color-mix(in oklch, var(--muted-foreground) 70%, var(--background));
+
+  /* accents — chat's cyan brand colour lives in --primary; the rest map onto
+     the design system's chart hues so they stay theme-aware in both brands. */
+  --cyan: var(--primary);
+  --cyan-soft: color-mix(in oklch, var(--primary) 16%, transparent);
+  --cyan-glow: color-mix(in oklch, var(--primary) 55%, transparent);
+  --magenta: var(--chart-5);
+  --magenta-soft: color-mix(in oklch, var(--chart-5) 14%, transparent);
+  --green: var(--chart-1);
+  --green-glow: color-mix(in oklch, var(--chart-1) 55%, transparent);
+  --amber: var(--chart-4);
+  --red: var(--destructive);
+
+  /* reusable shadows */
+  --glow-cyan: 0 0 18px color-mix(in oklch, var(--primary) 35%, transparent);
+  --glow-magenta: 0 0 18px color-mix(in oklch, var(--chart-5) 35%, transparent);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--cyan-soft);
+  color: var(--primary);
+}
+
+/* Visible keyboard focus on dark glassy backgrounds — UA default is a 1px
+ * white outline, which is almost invisible against the gradients here.
+ * We use :where() to keep specificity at 0 and !important to defeat any
+ * Tailwind utility-layer ordering surprises across element types. */
+:where(*):focus { outline: none !important; }
+:where(button, a, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+
+/* Glassy panel — wrap content with `.glass` for the futuristic look. In the
+   Mind brand --glass is a solid card; the deepspace brand below restores the
+   translucent surface and the backdrop blur stays harmless either way. */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+/* Gradient-edged variant for hero cards. */
+.glass-gradient {
+  position: relative;
+  background: var(--glass);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-radius: 16px;
+}
+.glass-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--primary) 50%, transparent),
+    color-mix(in oklch, var(--chart-5) 35%, transparent) 50%,
+    transparent 75%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Slim, cool scrollbars. */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--foreground) 22%, transparent);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--foreground) 40%, transparent);
+}
+
+code,
+.mono {
+  font-family: var(--mind-font-mono, "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 0.85em;
+  letter-spacing: -0.01em;
+}
+code {
+  padding: 0.1em 0.35em;
+  background: color-mix(in oklch, var(--primary) 8%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--primary);
+}
+
+/* Per-user identity colour (colorForKey). The palette is tuned bright for
+   dark backgrounds (and for use as avatar fills with black initials). When the
+   name is rendered as *text*, that brightness is unreadable on a light page —
+   so in any light mode that isn't the intrinsically-dark Deep Space brand we
+   blend the colour toward black for contrast. Avatars keep the raw colour. */
+.author-color {
+  color: var(--author-color);
+}
+html.light:not([data-mind-theme="deepspace"]) .author-color {
+  color: color-mix(in oklch, var(--author-color), black 45%);
+}
+
+/* Subtle pulse for the "live" status dot. */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--green-glow);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in oklch, var(--chart-1) 0%, transparent);
+    transform: scale(1.05);
+  }
+}
+.pulse-green {
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+
+/* Rotating gradient ring for the "connecting" state. */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin-ring {
+  animation: spin 1.6s linear infinite;
+}
+
+/* Subtle shimmer for the persona-card hover state. */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ================================================================== */
+/*  Deep Space — the glassy cyan brand. Colours come from the          */
+/*  `deepspace` Theme object (data-mind-theme="deepspace"); below are   */
+/*  the flourishes that can't be expressed as tokens: the nebula glow,  */
+/*  scanline grid, and translucent glass surfaces.                      */
+/* ================================================================== */
+[data-mind-theme="deepspace"] {
+  color-scheme: dark;
+
+  /* Restore the translucent glass surfaces the .glass classes expect. */
+  --glass: rgba(20, 26, 38, 0.55);
+  --glass-2: rgba(28, 36, 52, 0.6);
+  --glass-strong: rgba(36, 46, 66, 0.7);
+}
+
+/* Radial nebula glow behind everything. */
+[data-mind-theme="deepspace"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(92, 225, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 90% 100%, rgba(255, 123, 233, 0.06), transparent 60%),
+    var(--background);
+  pointer-events: none;
+}
+
+/* Scanline grid, masked to a soft ellipse. */
+[data-mind-theme="deepspace"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(120, 160, 220, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 160, 220, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 0%, transparent 75%);
+  pointer-events: none;
+}
