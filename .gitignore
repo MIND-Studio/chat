@@ -6,5 +6,6 @@ tsconfig.tsbuildinfo
 .css-data
 .indexer-data
 *.log
-.env.local
+.env*
+!.env.example
 .DS_Store

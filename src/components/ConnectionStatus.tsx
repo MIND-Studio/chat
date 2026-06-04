@@ -10,9 +10,12 @@ export function ConnectionStatus({
   const { color, label, dotClass, ringClass } = describe(state);
   return (
     <div
+      role="status"
+      aria-live="polite"
       className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[color:var(--text-muted)]"
       title={detail ?? label}
     >
+      <span className="sr-only">Connection: </span>
       <span className="relative inline-flex size-2.5 items-center justify-center">
         {ringClass ? (
           <span

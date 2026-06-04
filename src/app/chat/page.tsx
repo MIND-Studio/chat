@@ -24,8 +24,11 @@ import { MessageList } from "@/components/MessageList";
 import { Composer } from "@/components/Composer";
 import { ConnectionStatus, type ConnState } from "@/components/ConnectionStatus";
 import { RoomSidebar } from "@/components/RoomSidebar";
+import { MembersSheet } from "@/components/MembersSheet";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { shortName } from "@/lib/util/format";
+import { computeParticipants } from "@/lib/util/participants";
+import { Button } from "@mind-studio/ui";
 
 export default function ChatPage() {
   const { webid, loggedIn, loading, fetch: authFetch, signOut } = useSession();
@@ -37,6 +40,8 @@ export default function ChatPage() {
   const [connState, setConnState] = useState<ConnState>("connecting");
   const [error, setError] = useState<string | null>(null);
   const [now, setNow] = useState<number>(() => Date.now());
+  // Mobile-only members slide-over (the sidebar is hidden below md).
+  const [membersOpen, setMembersOpen] = useState(false);
 
   const subRef = useRef<SubscriptionHandle | null>(null);
 
@@ -51,6 +56,13 @@ export default function ChatPage() {
     for (const m of messages) s.add(m.author);
     return Array.from(s);
   }, [members, meta?.creator, webid, messages]);
+
+  // Member count for the mobile header button — same derivation the sidebar /
+  // sheet use, so the badge matches the list it opens.
+  const memberCount = useMemo(
+    () => computeParticipants(messages, webid, meta?.creator, members).length,
+    [messages, webid, meta?.creator, members],
+  );
 
   useEffect(() => {
     if (!loading && !loggedIn) router.replace("/");
@@ -233,6 +245,19 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            {/* The members sidebar is hidden below md, so surface the roster
+                behind a count button that opens a slide-over on mobile. */}
+            <Button
+              variant="ghost"
+              aria-label={`Members (${memberCount})`}
+              title="Members"
+              onClick={() => setMembersOpen(true)}
+              data-testid="members-mobile"
+              className="flex h-auto items-center gap-1 rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[10px] leading-none text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)] md:hidden"
+            >
+              <span aria-hidden>👥</span>
+              <span>{memberCount.toString().padStart(2, "0")}</span>
+            </Button>
             <ConnectionStatus state={connState} detail={error ?? undefined} />
             <span
               className="hidden font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)] sm:inline"
@@ -241,6 +266,19 @@ export default function ChatPage() {
               {webid ? shortName(webid) : ""}
             </span>
             <ThemeToggle />
+            {/* The sidebar (which holds the only "disconnect" control) is hidden
+                below md, so surface sign-out in the header on mobile. */}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Sign out"
+              title="Disconnect"
+              onClick={signOut}
+              data-testid="signout-mobile"
+              className="text-base leading-none md:hidden"
+            >
+              <span aria-hidden>⏻</span>
+            </Button>
           </div>
         </header>
 
@@ -262,6 +300,16 @@ export default function ChatPage() {
 
         <Composer onSend={handleSend} disabled={!authFetch} members={knownWebids} />
       </section>
+
+      <MembersSheet
+        open={membersOpen}
+        onClose={() => setMembersOpen(false)}
+        meta={meta}
+        messages={messages}
+        selfWebid={webid}
+        members={members}
+        onInvite={handleInvite}
+      />
     </main>
   );
 }

@@ -43,6 +43,9 @@ export function MessageList({
   const stickRef = useRef(true);
   const prevLenRef = useRef(messages.length);
   const [editingUrl, setEditingUrl] = useState<string | null>(null);
+  // Which message is showing its inline "sure? ✓ ✕" delete confirmation —
+  // replaces a native window.confirm() so the prompt matches the app's theme.
+  const [confirmDeleteUrl, setConfirmDeleteUrl] = useState<string | null>(null);
   // Count of messages that arrived while the reader was scrolled away from the
   // bottom — surfaced as a "jump to latest" pill so new transmissions aren't
   // missed without yanking the viewport. Cleared once the reader is back at
@@ -196,7 +199,7 @@ export function MessageList({
                     }}
                   />
                 ) : (
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="relative">
                     <div
                       data-testid="message-body"
                       className="min-w-0 break-words text-sm"
@@ -204,7 +207,7 @@ export function MessageList({
                       <MessageBody body={m.body} mentions={mentionMap} selfHandle={selfHandle} />
                     </div>
                     {onEdit || onDelete || onReact ? (
-                      <div className="hidden shrink-0 items-center gap-1 self-start group-hover:flex">
+                      <div className="absolute bottom-full right-0 z-[2] mb-0.5 hidden items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--glass-strong)] px-1 py-0.5 shadow-sm backdrop-blur-md group-hover:flex">
                         {onReact ? (
                           <div className="relative">
                             <Button
@@ -212,8 +215,9 @@ export function MessageList({
                               onClick={() => setPickerForUrl(pickerForUrl === m.url ? null : m.url)}
                               className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)]"
                               title="react"
+                              aria-label="Add reaction"
                             >
-                              ☺
+                              <span aria-hidden>☺</span>
                             </Button>
                             {pickerForUrl === m.url ? (
                               <div className="absolute right-0 top-full z-10 mt-1 flex gap-1 rounded-md border border-[color:var(--border-strong)] bg-[color:var(--glass-strong)] px-1.5 py-1 backdrop-blur-md">
@@ -249,26 +253,51 @@ export function MessageList({
                           </Button>
                         ) : null}
                         {isMine && onDelete ? (
-                          <Button
-                            variant="ghost"
-                            onClick={async () => {
-                              if (
-                                typeof window !== "undefined" &&
-                                !window.confirm("delete this message? this can't be undone in the UI.")
-                              )
-                                return;
-                              try {
-                                await onDelete(m);
-                              } catch (err) {
-                                // eslint-disable-next-line no-console
-                                console.error("delete failed", err);
-                              }
-                            }}
-                            className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--red)] hover:text-[color:var(--red)]"
-                            title="delete"
-                          >
-                            delete
-                          </Button>
+                          confirmDeleteUrl === m.url ? (
+                            <>
+                              <span className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]">
+                                delete?
+                              </span>
+                              <Button
+                                variant="ghost"
+                                onClick={async () => {
+                                  setConfirmDeleteUrl(null);
+                                  try {
+                                    await onDelete(m);
+                                  } catch (err) {
+                                    // eslint-disable-next-line no-console
+                                    console.error("delete failed", err);
+                                  }
+                                }}
+                                className="h-auto rounded border border-[color:var(--red)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--red)] hover:bg-[color:var(--red)]/10"
+                                title="confirm delete"
+                                aria-label="Confirm delete"
+                              >
+                                <span aria-hidden>✓</span> yes
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                onClick={() => setConfirmDeleteUrl(null)}
+                                className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--text-muted)] hover:text-[color:var(--text-muted)]"
+                                title="cancel delete"
+                                aria-label="Cancel delete"
+                              >
+                                <span aria-hidden>✕</span>
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                setPickerForUrl(null);
+                                setConfirmDeleteUrl(m.url);
+                              }}
+                              className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--red)] hover:text-[color:var(--red)]"
+                              title="delete"
+                            >
+                              delete
+                            </Button>
+                          )
                         ) : null}
                       </div>
                     ) : null}
@@ -306,12 +335,16 @@ export function MessageList({
                   </div>
                 ) : null}
               </div>
-              {!newGroup && !isEditing ? (
+              {!isEditing ? (
+                // Always reserve this w-14 gutter (invisible→visible on hover)
+                // so revealing the timestamp doesn't shift the message column.
+                // Group leaders show their time in the header, so the gutter is
+                // just empty reserved space for them.
                 <span
-                  className="hidden w-14 shrink-0 self-start pt-px text-right font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)] group-hover:inline"
+                  className="invisible w-14 shrink-0 self-start pt-px text-right font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)] group-hover:visible"
                   title={absoluteTime(m.createdAtIso)}
                 >
-                  {relativeTime(m.createdAtIso, now)}
+                  {!newGroup ? relativeTime(m.createdAtIso, now) : null}
                 </span>
               ) : null}
             </li>
