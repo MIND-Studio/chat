@@ -108,7 +108,7 @@ A chat room is a Solid container on someone's pod. Messages are append-only RDF 
                 │   │                              │
                 ▼   ▼                              │
        ┌──────────────────────────────────────────────────┐
-       │  mind-chat-v0 frontend (Next.js, localhost:3030) │
+       │  chat frontend (Next.js, localhost:3030) │
        │   - sidebar of rooms (from each user's           │
        │     /chat/index.ttl)                             │
        │   - active room view (subscribed via WS)         │

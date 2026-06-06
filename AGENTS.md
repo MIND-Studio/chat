@@ -5,7 +5,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 <!-- END:nextjs-agent-rules -->
 
 <!-- BEGIN:mind-chat-rules -->
-# mind-chat-v0 — agent rules
+# chat — agent rules
 
 This prototype runs on Solid pods. **Never invent a central database for users, chat rooms, messages, or membership.** A chat room is a Solid container; a message is an RDF resource inside it; access control is WAC. The Next.js app is a thin client + a few API routes that proxy to pods on behalf of the browser. There is no `messages` table anywhere on the server.
 

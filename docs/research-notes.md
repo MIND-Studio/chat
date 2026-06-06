@@ -1,8 +1,8 @@
-# mind-chat-v0 — research notes
+# chat — research notes
 
 Pre-implementation research conducted 2026-05-26. Three parallel agents surveyed (1) the sibling prototypes for conventions to mirror, (2) the existing Solid chat ecosystem and the long-chat data model, and (3) real-time delivery primitives on Solid (WebSocketChannel2023, LDN, federation). Output below is captured verbatim-ish for future implementation reference — when in doubt, this file is the authoritative source for "why we picked X."
 
-## 1. Sibling-prototype conventions (what mind-chat-v0 must mirror)
+## 1. Sibling-prototype conventions (what chat must mirror)
 
 ### Universal scaffolding shape
 
@@ -25,10 +25,10 @@ Pre-implementation research conducted 2026-05-26. Three parallel agents surveyed
 | `mind-market-v0` | 3000 | 3001, 3002 |
 | `mind-codespaces-v0` | 3010 | 3011 |
 | `mind-os-v0` | 3020 | 3021 |
-| **`mind-chat-v0`** (this) | **3030** | **3031, 3032** |
+| **`chat`** (this) | **3030** | **3031, 3032** |
 | `mind-social-network-v0` | 3050 | 3051, 3052 |
 
-`mind-chat-v0` takes the 303x decade, leaving 304x free for the next prototype.
+`chat` takes the 303x decade, leaving 304x free for the next prototype.
 
 ### Standard `src/lib/solid/` contents (port these)
 
@@ -38,7 +38,7 @@ Pre-implementation research conducted 2026-05-26. Three parallel agents surveyed
 - `profile.ts` — user profile read/write
 - `ldn-client.ts` — Linked Data Notifications (inbox posting)
 
-For mind-chat-v0 specifically, add:
+For chat specifically, add:
 
 - `chat.ts` — room create, message PATCH, day-file PUT-if-not-exists
 - `chat-subscription.ts` — WebSocketChannel2023 subscribe/unsubscribe, day-rollover handling
@@ -74,7 +74,7 @@ Custom RDF vocab used there:
 - `DM_SENDER = "http://mind.example/voc#sender"`
 - `DM_PARTICIPANT = "http://mind.example/voc#participant"`
 
-**mind-chat-v0 deliberately diverges:** instead of inventing `mind.example/voc#` predicates, we adopt the SolidOS long-chat spec (`meeting:`, `sioc:`, `foaf:`, `dct:`, `schema:`) for free interop with SolidOS chat-pane and to reduce schema bikeshedding.
+**chat deliberately diverges:** instead of inventing `mind.example/voc#` predicates, we adopt the SolidOS long-chat spec (`meeting:`, `sioc:`, `foaf:`, `dct:`, `schema:`) for free interop with SolidOS chat-pane and to reduce schema bikeshedding.
 
 ## 2. Solid chat ecosystem — prior art survey
 
@@ -114,7 +114,7 @@ Messages are **appended via HTTP PATCH (SPARQL UPDATE INSERT)** to today's `chat
 
 **ActivityStreams 2.0 (`as:Note`/`as:Create`) is used only for LDN inbox notifications between pods, not for message storage.** `schema:Message` is essentially unused.
 
-**Decision: mind-chat-v0 adopts the SolidOS long-chat layout verbatim** so existing tooling (SolidOS chat-pane) can read our data.
+**Decision: chat adopts the SolidOS long-chat layout verbatim** so existing tooling (SolidOS chat-pane) can read our data.
 
 ### Solid Notifications Protocol — concrete status
 
@@ -166,7 +166,7 @@ Subscription POST requires Solid-OIDC auth with `Read` on the topic; the spec us
 - **WebID exposes** `ldp:inbox` pointing at an LDP container (any container; `ldp:Container` is sufficient per LDN spec).
 - **Alice POSTs** an Activity Streams 2.0 JSON-LD notification to Bob's inbox URL; LDN says the inbox MUST mint a new resource on POST.
 - **CSS does NOT auto-create an inbox.** You provision `/inbox/` and patch the WebID to add `ldp:inbox` during account setup.
-- The social-network prototype already does the receiving half: see `mind-social-network-v0/src/app/api/ldn/inbox/route.ts` + `src/lib/schemas/ldn-payloads.ts` (11 typed LDN payloads, Zod-validated, dedup'd by `id`). **Port this directly** for mind-chat-v0's invite-handling.
+- The social-network prototype already does the receiving half: see `mind-social-network-v0/src/app/api/ldn/inbox/route.ts` + `src/lib/schemas/ldn-payloads.ts` (11 typed LDN payloads, Zod-validated, dedup'd by `id`). **Port this directly** for chat's invite-handling.
 
 ### E2E encryption — prior art is thin
 
@@ -175,7 +175,7 @@ Subscription POST requires Solid-OIDC auth with `Read` on the topic; the spec us
 - Nothing in `@inrupt/solid-client` ships crypto. No de facto Signal/MLS-on-Solid library.
 - KIT Karlsruhe published academic work ([Web Push from Solid Pods](https://publikationen.bibliothek.kit.edu/1000149760/156149736)) but no production code.
 
-**The reasonable shippable pattern (deferred to v1):** publish X25519 pubkey in WebID profile (custom predicate or reuse `cert:key`); libsodium sealed-boxes in browser; ciphertext as `sioc:content`. mind-chat-v0 would be among the first to ship this properly.
+**The reasonable shippable pattern (deferred to v1):** publish X25519 pubkey in WebID profile (custom predicate or reuse `cert:key`); libsodium sealed-boxes in browser; ciphertext as `sioc:content`. chat would be among the first to ship this properly.
 
 ### Access control patterns observed
 
@@ -186,7 +186,7 @@ Existing apps split into two camps:
 
 **WAC vs ACP:** WAC is universally supported (CSS v7 default), ACP is ESS-only. For chat, WAC `acl:agent` listing each member WebID is sufficient — keep WAC.
 
-**Decision: mind-chat-v0 uses the shared-channel pattern** (room hosted on owner's pod, members get WAC append). It's the simpler model and fits the "rooms have an owner" UX. The sender-hosted pattern is more elegant but requires every member's pod to be writeable by every other member, which is a federation tax we're deferring.
+**Decision: chat uses the shared-channel pattern** (room hosted on owner's pod, members get WAC append). It's the simpler model and fits the "rooms have an owner" UX. The sender-hosted pattern is more elegant but requires every member's pod to be writeable by every other member, which is a federation tax we're deferring.
 
 ### Latency expectations
 

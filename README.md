@@ -1,4 +1,4 @@
-# mind-chat-v0
+# chat
 
 Privacy-first chat prototype. Rooms, messages — all stored as RDF in Solid pods using the [SolidOS long-chat layout](https://solid.github.io/chat/). No central message store. Real-time delivery via Solid notifications (WebSocketChannel2023), not a chat server.
 
@@ -87,9 +87,6 @@ When alice's client (or the seed script) PATCHes today's `chat.ttl`, CSS emits a
 
 This prototype is part of the Mind ecosystem and shares its stack (Next.js 16 + Inrupt + Tailwind v4 + Docker) with:
 
-- [`mind-market-v0`](../mind-market-v0/) — privacy-first marketplace
-- [`mind-codespaces-v0`](../mind-codespaces-v0/) — privacy-first dev environments
-- [`mind-os-v0`](../mind-os-v0/) — Debian-in-the-browser with the pod as disk
-- [`mind-social-network-v0`](../mind-social-network-v0/) — privacy-first social network (closest reference; its `src/lib/solid/dm.ts` is the most analogous module)
+- [codespaces](https://github.com/MIND-Studio/codespaces) — privacy-first dev environments
 
 A single WebID can move between all of them.

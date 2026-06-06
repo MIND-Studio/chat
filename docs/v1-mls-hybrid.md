@@ -62,7 +62,7 @@ This reuses v0's transport and storage almost verbatim — the change is *what* 
 
 ## Validation spike (do this before scaffolding a prototype)
 
-Throwaway, headless, no UI until the end. Lives in `mind-prototypes/_spike-mls/` (scratch, deleted after), reuses the v0 CSS host on :3031, never touches `mind-chat-v0`. Answers two yes/no questions: (a) is there a JS/WASM MLS lib that runs a full group lifecycle and works in a browser? (b) do concurrent Commits converge with a pod container as Delivery Service?
+Throwaway, headless, no UI until the end. Lives in `mind-prototypes/_spike-mls/` (scratch, deleted after), reuses the v0 CSS host on :3031, never touches `chat`. Answers two yes/no questions: (a) is there a JS/WASM MLS lib that runs a full group lifecycle and works in a browser? (b) do concurrent Commits converge with a pod container as Delivery Service?
 
 - **Phase 0 — pick the library (verify, don't assume).** OpenMLS is Rust; confirm a usable npm artifact. Candidates: **`@wireapp/core-crypto`** (Rust+WASM, TS, production — likely winner), **`ts-mls`** (pure TS), **mls-rs** WASM. Criteria: RFC 9420, WASM/browser target, group ops + KeyPackages, license. Deliverable: a hello-world that inits the MLS provider in Node.
 - **Phase 1 — MLS mechanics, zero network.** Two in-memory clients. Bob publishes a KeyPackage → Alice creates group, adds Bob, produces Commit+Welcome → Bob joins → assert plaintext round-trips both ways and epoch advances.

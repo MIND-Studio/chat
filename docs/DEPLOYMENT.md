@@ -1,6 +1,6 @@
 # Deploying mind-chat to `chat.mindpods.org`
 
-Plan to take `mind-chat-v0` from a dev-only prototype to a shipped app in the
+Plan to take `chat` from a dev-only prototype to a shipped app in the
 [`mindpods-infra`](../../mindpods-infra) fleet, alongside dock / drive / builder /
 codespaces. It mirrors exactly what those four already do — copy from
 `mind-drive-v0` (Dockerfile + `release.yml`) and follow
@@ -50,7 +50,7 @@ These are real decisions, not mechanics — settle them first.
 
 ---
 
-## Part A — Productionize the app repo (`mind-chat-v0`)
+## Part A — Productionize the app repo (`chat`)
 
 Four changes, all in this repo. None touch infra.
 
@@ -140,7 +140,7 @@ which ships images with `default_workflow_permissions: read`.)
 ### A5. Build + verify locally before tagging
 
 ```bash
-cd mind-chat-v0
+cd chat
 npm run typecheck
 NODE_AUTH_TOKEN=$(gh auth token) npm run build      # confirm .next/standalone/server.js exists
 ```
@@ -267,7 +267,7 @@ Then the real tests:
 The fixed demo room must exist on the live pod with correct ACL before E2 works:
 
 ```bash
-cd mind-chat-v0
+cd chat
 cp .env.live.example .env.local        # fill PERSONA_*_PASSWORD
 npm run seed:demo                       # idempotent; creates room + grants ACL
 ```
@@ -279,7 +279,7 @@ via `codespaces.mindpods.org/signup` or the seed script, depending on its mode.)
 
 ## Day-2
 
-- **Update chat:** push a new tag in `mind-chat-v0` → copy the new digest into the
+- **Update chat:** push a new tag in `chat` → copy the new digest into the
   box's `images.env` → `./scripts/deploy.sh`.
 - **Room discovery (fast-follow):** replace the baked `NEXT_PUBLIC_ROOM_URL` with
   runtime per-user room listing so the image is user-agnostic. Until then every
