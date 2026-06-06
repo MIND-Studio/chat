@@ -2,7 +2,7 @@
  *
  * A handle is a person's WebID first path segment — the same "username" that
  * {@link shortName} surfaces everywhere else in the UI (e.g.
- * `https://pod.mindpods.org/testuser/profile/card#me` → `testuser`). So
+ * `https://pods.mindpods.org/testuser/profile/card#me` → `testuser`). So
  * `@testuser` in a message resolves to that person's WebID, with no parallel
  * naming scheme to keep in sync.
  *

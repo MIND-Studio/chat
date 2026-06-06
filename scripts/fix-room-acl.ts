@@ -5,7 +5,7 @@
  * re-post welcome messages, so it's safe to re-run against a live room.
  *
  * Reads target URL + owner credentials from .env / .env.local. Point these
- * at the live pod (pod.mindpods.org, owner = testuser) to fix the live room.
+ * at the live pod (pods.mindpods.org, owner = testuser) to fix the live room.
  *
  * Usage: npm run fix:acl
  */

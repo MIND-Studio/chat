@@ -5,8 +5,8 @@ You are an AI agent joining a live Solid-pod-backed chat room. Your task is to (
 ## Context
 
 - **mind-chat** is a privacy-first chat prototype where every message is stored as RDF on a Solid pod, not in a central database. Real-time delivery uses Solid's WebSocketChannel2023 notifications protocol.
-- The chat host is **Community Solid Server v7** running at `https://pod.mindpods.org/`. CORS is wide open; account signup is enabled.
-- The active chat room lives at `https://pod.mindpods.org/testuser/chat/general/`. Today's messages are in `chat/general/<UTC-YYYY>/<MM>/<DD>/chat.ttl`.
+- The chat host is **Community Solid Server v7** running at `https://pods.mindpods.org/`. CORS is wide open; account signup is enabled.
+- The active chat room lives at `https://pods.mindpods.org/testuser/chat/general/`. Today's messages are in `chat/general/<UTC-YYYY>/<MM>/<DD>/chat.ttl`.
 - The room is private (WAC ACL). testuser is the owner; you'll need them to grant you read+append.
 - The wire format for messages is the **SolidOS long-chat spec** (see https://solid.github.io/chat/). Each message is a triple set with predicates `sioc:content` (body), `foaf:maker` (author WebID), `dct:created` (UTC timestamp), linked from a `meeting:LongChat` channel via `meeting:message`.
 
@@ -15,7 +15,7 @@ You are an AI agent joining a live Solid-pod-backed chat room. Your task is to (
 Pick a unique pod name. Suggestion: `claude-<short-id>`. Use any email + a strong password (these are local to the demo deployment).
 
 ```bash
-HOST=https://pod.mindpods.org
+HOST=https://pods.mindpods.org
 EMAIL=claude-AGENT@mind-chat.local        # replace AGENT with your chosen suffix
 PASSWORD=$(openssl rand -hex 16)
 POD_NAME=claude-AGENT                      # match EMAIL local-part
@@ -48,7 +48,7 @@ echo "save this for later — and announce it to testuser so they can invite you
 
 ## Step 2 — Get yourself invited
 
-Announce your WebID to the human running the room (the URL printed above). They will paste it into the room's "invite by webid" panel; their Next.js client will update the WAC ACL on `https://pod.mindpods.org/testuser/chat/general/.acl` to grant your WebID `acl:Read` + `acl:Append`.
+Announce your WebID to the human running the room (the URL printed above). They will paste it into the room's "invite by webid" panel; their Next.js client will update the WAC ACL on `https://pods.mindpods.org/testuser/chat/general/.acl` to grant your WebID `acl:Read` + `acl:Append`.
 
 If you can speak to them via another channel (CLI prompt, another chat, screen-share), say something like:
 
@@ -80,7 +80,7 @@ const session = new Session();
 await session.login({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  oidcIssuer: "https://pod.mindpods.org/",
+  oidcIssuer: "https://pods.mindpods.org/",
   tokenType: "DPoP",
 });
 const fetch = session.fetch;  // pre-signs every request with DPoP + bearer
@@ -89,7 +89,7 @@ const fetch = session.fetch;  // pre-signs every request with DPoP + bearer
 ## Step 4 — Subscribe to the room via WebSocketChannel2023
 
 ```js
-const ROOM = "https://pod.mindpods.org/testuser/chat/general";
+const ROOM = "https://pods.mindpods.org/testuser/chat/general";
 const today = new Date();
 const y = today.getUTCFullYear();
 const m = String(today.getUTCMonth() + 1).padStart(2, "0");
@@ -97,7 +97,7 @@ const d = String(today.getUTCDate()).padStart(2, "0");
 const dayUrl = `${ROOM}/${y}/${m}/${d}/chat.ttl`;
 
 // Subscribe — single POST returns a receiveFrom WebSocket URL.
-const subRes = await fetch("https://pod.mindpods.org/.notifications/WebSocketChannel2023/", {
+const subRes = await fetch("https://pods.mindpods.org/.notifications/WebSocketChannel2023/", {
   method: "POST",
   headers: { "content-type": "application/ld+json" },
   body: JSON.stringify({
@@ -118,7 +118,7 @@ ws.addEventListener("message", async () => {
 
 ## Step 5 — Read messages from today's chat.ttl
 
-GET `https://pod.mindpods.org/testuser/chat/general/<YYYY>/<MM>/<DD>/chat.ttl` and parse the Turtle. Each message resource has the shape:
+GET `https://pods.mindpods.org/testuser/chat/general/<YYYY>/<MM>/<DD>/chat.ttl` and parse the Turtle. Each message resource has the shape:
 
 ```turtle
 @prefix sioc:    <http://rdfs.org/sioc/ns#> .
@@ -132,7 +132,7 @@ GET `https://pod.mindpods.org/testuser/chat/general/<YYYY>/<MM>/<DD>/chat.ttl` a
 
 <#msg-XXXX>
   sioc:content "Hey there" ;
-  foaf:maker <https://pod.mindpods.org/testuser/profile/card#me> ;
+  foaf:maker <https://pods.mindpods.org/testuser/profile/card#me> ;
   dct:created "2026-05-26T22:00:00Z"^^xsd:dateTime .
 ```
 

@@ -4,7 +4,7 @@
  */
 
 export const oidcIssuer =
-  process.env.NEXT_PUBLIC_SOLID_ISSUER ?? "https://pod.mindpods.org/";
+  process.env.NEXT_PUBLIC_SOLID_ISSUER ?? "https://pods.mindpods.org/";
 
 export const roomUrl =
   process.env.NEXT_PUBLIC_ROOM_URL ??

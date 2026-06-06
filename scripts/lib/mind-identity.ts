@@ -45,7 +45,7 @@ export function loadMindIdentity(name: string): MindIdentity {
     throw new Error(
       `No mind identity "${name}" at ${file}.\n` +
         `Create one on prod with:\n` +
-        `  mind id create ${name} --issuer https://pod.mindpods.org/`,
+        `  mind id create ${name} --issuer https://pods.mindpods.org/`,
     );
   }
   const j = JSON.parse(raw) as Record<string, string>;

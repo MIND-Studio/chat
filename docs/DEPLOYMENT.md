@@ -15,7 +15,7 @@ no CI, not wired into infra. This doc is the to-do list.
 
 mind-chat is a **client-only SPA**: no API routes, no server-only code, all
 components are `'use client'`. It talks directly to the pod for OIDC, data, and
-real-time. **`WebSocketChannel2023` connects to `pod.mindpods.org`** — which Caddy
+real-time. **`WebSocketChannel2023` connects to `pods.mindpods.org`** — which Caddy
 already reverse-proxies — **not** to the chat app's own origin.
 
 Consequence: the `chat.mindpods.org` vhost is a plain reverse-proxy to a standalone
@@ -118,9 +118,9 @@ Copy `drive/.github/workflows/release.yml` to
 
 ```yaml
 build-args: |
-  NEXT_PUBLIC_SOLID_ISSUER=https://pod.mindpods.org/
-  NEXT_PUBLIC_POD_BASE_URL=https://pod.mindpods.org/
-  NEXT_PUBLIC_ROOM_URL=https://pod.mindpods.org/testuser/chat/general
+  NEXT_PUBLIC_SOLID_ISSUER=https://pods.mindpods.org/
+  NEXT_PUBLIC_POD_BASE_URL=https://pods.mindpods.org/
+  NEXT_PUBLIC_ROOM_URL=https://pods.mindpods.org/testuser/chat/general
   NEXT_PUBLIC_PERSONA_A_NAME=Test User
   NEXT_PUBLIC_PERSONA_B_NAME=Chat Bob
   NEXT_PUBLIC_APP_DOCK_URL=https://dock.mindpods.org
@@ -253,7 +253,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://chat.mindpods.org     # 200
 Then the real tests:
 
 1. **SSO:** sign in at `dock.mindpods.org`, open `chat.mindpods.org` — one consent,
-   no second password (shared OIDC issuer at `pod.mindpods.org`).
+   no second password (shared OIDC issuer at `pods.mindpods.org`).
 2. **Round-trip:** open the room in two browsers (or use `npm run smoke:roundtrip`
    pointed at the live profile), send a message, confirm sub-100ms delivery via
    `WebSocketChannel2023`.
@@ -272,7 +272,7 @@ cp .env.live.example .env.local        # fill PERSONA_*_PASSWORD
 npm run seed:demo                       # idempotent; creates room + grants ACL
 ```
 
-(Provision the `chat-bob` account on `pod.mindpods.org` first if it doesn't exist —
+(Provision the `chat-bob` account on `pods.mindpods.org` first if it doesn't exist —
 via `codespaces.mindpods.org/signup` or the seed script, depending on its mode.)
 
 ---

@@ -70,9 +70,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            NEXT_PUBLIC_SOLID_ISSUER=https://pod.mindpods.org/
-            NEXT_PUBLIC_POD_BASE_URL=https://pod.mindpods.org/
-            NEXT_PUBLIC_ROOM_URL=https://pod.mindpods.org/testuser/chat/general
+            NEXT_PUBLIC_SOLID_ISSUER=https://pods.mindpods.org/
+            NEXT_PUBLIC_POD_BASE_URL=https://pods.mindpods.org/
+            NEXT_PUBLIC_ROOM_URL=https://pods.mindpods.org/testuser/chat/general
             NEXT_PUBLIC_PERSONA_A_NAME=Test User
             NEXT_PUBLIC_PERSONA_B_NAME=Chat Bob
             NEXT_PUBLIC_APP_DOCK_URL=https://dock.mindpods.org
