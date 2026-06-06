@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@mind-studio/ui";
+import { Button, Input } from "@mind-studio/ui";
 
 export function InvitePanel({
   onInvite,
@@ -66,7 +66,7 @@ export function InvitePanel({
           ✕
         </Button>
       </div>
-      <input
+      <Input
         ref={inputRef}
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
@@ -80,7 +80,8 @@ export function InvitePanel({
         spellCheck={false}
         autoComplete="off"
         disabled={busy}
-        className="w-full rounded-md border border-[color:var(--border)] bg-[color:var(--bg-1)] px-2 py-1 font-mono text-[11px] outline-none placeholder:text-[color:var(--text-faint)] focus:border-[color:var(--cyan)] disabled:opacity-50"
+        // Compact, mono variant of the design-system Input to match the panel.
+        className="h-auto w-full rounded-md border-[color:var(--border)] bg-[color:var(--bg-1)] px-2 py-1 font-mono text-[11px] placeholder:text-[color:var(--text-faint)] focus-visible:border-[color:var(--cyan)] focus-visible:ring-0"
       />
       <div className="mt-1.5 flex items-center justify-between gap-2">
         <span

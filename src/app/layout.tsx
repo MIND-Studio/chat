@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  *   • mode   → .dark / .light    (next-themes key `chat:mode`, default dark)
  * <ThemeShell>/next-themes reconcile these on mount.
  */
-const THEME_INIT = `(function(){try{var b=localStorage.getItem("chat:brand");if(b!=="deepspace"&&b!=="mind")b="mind";document.documentElement.setAttribute("data-mind-theme",b);var m=localStorage.getItem("chat:mode");var dark=m?m==="dark":true;document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.setAttribute("data-mind-theme","mind");document.documentElement.classList.add("dark");}})();`;
+const THEME_INIT = `(function(){try{var b=localStorage.getItem("chat:brand");if(b!=="deepspace"&&b!=="mind")b="deepspace";document.documentElement.setAttribute("data-mind-theme",b);var m=localStorage.getItem("chat:mode");var dark=m?m==="dark":true;document.documentElement.classList.toggle("dark",dark);document.documentElement.classList.toggle("light",!dark);}catch(e){document.documentElement.setAttribute("data-mind-theme","deepspace");document.documentElement.classList.add("dark");}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

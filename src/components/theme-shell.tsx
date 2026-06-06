@@ -47,7 +47,7 @@ export function useBrand(): BrandContextValue {
  * flash-of-wrong-theme.
  */
 export function ThemeShell({ children }: { children: React.ReactNode }) {
-  const [brand, setBrandState] = useState<Brand>("mind");
+  const [brand, setBrandState] = useState<Brand>("deepspace");
 
   // Resolve the persisted brand after mount (SSR has no localStorage). The
   // pre-paint script already set data-mind-theme, so this only reconciles

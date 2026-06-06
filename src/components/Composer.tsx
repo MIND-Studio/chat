@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button } from "@mind-studio/ui";
+import { Button, Textarea } from "@mind-studio/ui";
 import { MENTION_PREFIX_RE, matchMentions } from "@/lib/util/mentions";
 
 const MAX_LEN = 4000;
@@ -163,7 +163,7 @@ export function Composer({
         </ul>
       ) : null}
       <div className="glass flex items-end gap-2 rounded-xl px-3 py-2 transition focus-within:border-[color:var(--cyan)] focus-within:shadow-[var(--glow-cyan)]">
-        <textarea
+        <Textarea
           ref={taRef}
           value={draft}
           onChange={(e) => {
@@ -175,7 +175,9 @@ export function Composer({
           disabled={disabled || sending}
           rows={1}
           placeholder="Message #general"
-          className="min-h-[20px] flex-1 resize-none bg-transparent text-sm outline-none placeholder:text-[color:var(--text-faint)] disabled:opacity-50"
+          // Strip the design-system Textarea's own border/bg/ring/padding so it
+          // reads as a borderless field inside chat's glassy composer shell.
+          className="min-h-[20px] flex-1 resize-none border-0 bg-transparent px-0 py-0 text-sm shadow-none outline-none placeholder:text-[color:var(--text-faint)] focus-visible:ring-0 disabled:opacity-50 dark:bg-transparent"
           data-testid="compose-input"
         />
         <Button

@@ -1,3 +1,5 @@
+import { Badge } from "@mind-studio/ui";
+
 export type ConnState = "connecting" | "connected" | "polling" | "error";
 
 export function ConnectionStatus({
@@ -9,10 +11,11 @@ export function ConnectionStatus({
 }): React.JSX.Element {
   const { color, label, dotClass, ringClass } = describe(state);
   return (
-    <div
+    <Badge
+      variant="outline"
       role="status"
       aria-live="polite"
-      className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[color:var(--text-muted)]"
+      className="gap-1.5 border-[color:var(--border)] bg-transparent px-2 py-0.5 text-[10px] font-normal uppercase tracking-[0.18em] text-[color:var(--text-muted)]"
       title={detail ?? label}
     >
       <span className="sr-only">Connection: </span>
@@ -34,7 +37,7 @@ export function ConnectionStatus({
         />
       </span>
       <span>{label}</span>
-    </div>
+    </Badge>
   );
 }
 

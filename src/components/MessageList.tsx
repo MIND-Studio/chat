@@ -172,7 +172,7 @@ export function MessageList({
                     >
                       {relativeTime(m.createdAtIso, now)}
                     </span>
-                    {m.editedAtIso ? (
+                    {m.editedAtIso && !m.deletedAtIso ? (
                       <span
                         className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]"
                         title={`edited ${absoluteTime(m.editedAtIso)}`}

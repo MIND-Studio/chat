@@ -45,7 +45,7 @@ export default function AboutPage() {
         <li>End-to-end encryption (X25519 + libsodium sealed-box)</li>
         <li>Cross-server federation (UMA tokens, foreign-pod inbox grants)</li>
         <li>Presence, typing indicators, read receipts</li>
-        <li>Edits, deletes, reactions, threading (the data model supports them; the UI doesn&apos;t yet)</li>
+        <li>Threading / replies (the data model supports it; the UI doesn&apos;t yet)</li>
         <li>Image uploads</li>
         <li>An indexer with a public-rooms directory</li>
       </ul>

@@ -227,29 +227,79 @@ html.light:not([data-mind-theme="deepspace"]) .author-color {
   --glass-strong: rgba(36, 46, 66, 0.7);
 }
 
-/* Radial nebula glow behind everything. */
+/* The cosmos lives on body's negative-z pseudo-elements, but body's own
+ * opaque `bg-background` composites *after* (over) them and would hide the
+ * whole scene. Drop body's fill in Deep Space so the html base colour shows
+ * as the void and the nebula/star/grid layers read through it. (Mind brand
+ * keeps its solid body background — untouched.) */
+[data-mind-theme="deepspace"] body {
+  background-color: transparent;
+}
+
+/* ---- The cosmos behind everything -------------------------------------- *
+ * Deep Space is meant to *feel* like deep space, not flat black. Three fixed
+ * layers stack below the UI (z -3..-1):
+ *   1. body::before  → drifting nebula glow + a faint two-scale starfield
+ *   2. html::before  → depth vignette (corners recede, centre lifts)
+ *   3. body::after   → scanline grid, masked to a soft horizon ellipse
+ * Kept on pseudo-elements so no DOM/markup changes and it costs nothing to
+ * the React tree. `prefers-reduced-motion` parks the drift.                  */
+
+/* 1 — nebula + starfield. Oversized + GPU-transform drift so the sky breathes
+ * without revealing its edges. Two tiled dot grids at coprime sizes read as an
+ * irregular scatter of distant stars rather than a visible lattice. */
 [data-mind-theme="deepspace"] body::before {
+  content: "";
+  position: fixed;
+  inset: -12%;
+  z-index: -3;
+  background:
+    /* cyan bloom arcing down across the top of the conversation canvas */
+    radial-gradient(ellipse 78% 66% at 50% -4%, rgba(92, 225, 255, 0.30), transparent 62%),
+    /* magenta bloom rising from the lower right */
+    radial-gradient(ellipse 74% 70% at 86% 106%, rgba(255, 123, 233, 0.24), transparent 62%),
+    /* violet core warming the centre of the void */
+    radial-gradient(ellipse 60% 58% at 64% 54%, rgba(123, 137, 255, 0.18), transparent 74%),
+    /* faint cyan kiss on the sidebar edge */
+    radial-gradient(ellipse 44% 64% at 6% 10%, rgba(92, 225, 255, 0.12), transparent 64%),
+    /* two-scale starfield — coprime tiles read as scatter, not lattice */
+    radial-gradient(1px 1px at 30px 24px, rgba(220, 238, 255, 0.85), transparent 55%),
+    radial-gradient(1.6px 1.6px at 88px 132px, rgba(176, 228, 255, 0.6), transparent 55%),
+    var(--background);
+  background-size: cover, cover, cover, cover, 143px 117px, 223px 197px, cover;
+  animation: nebulaDrift 44s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* 2 — vignette: darken the frame so the eye settles on the conversation. */
+[data-mind-theme="deepspace"] html::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, rgba(92, 225, 255, 0.08), transparent 60%),
-    radial-gradient(ellipse 70% 60% at 90% 100%, rgba(255, 123, 233, 0.06), transparent 60%),
-    var(--background);
+  background: radial-gradient(ellipse 96% 92% at 50% 44%, transparent 64%, rgba(2, 4, 9, 0.42) 100%);
   pointer-events: none;
 }
 
-/* Scanline grid, masked to a soft ellipse. */
+/* 3 — scanline grid, masked to a soft ellipse so it fades to a horizon. */
 [data-mind-theme="deepspace"] body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(120, 160, 220, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 160, 220, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 0%, transparent 75%);
+    linear-gradient(rgba(120, 160, 220, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 160, 220, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 82% 72% at 50% 38%, black 0%, transparent 78%);
   pointer-events: none;
+}
+
+@keyframes nebulaDrift {
+  from { transform: translate3d(-1.4%, -1%, 0) scale(1.06); }
+  to   { transform: translate3d(1.6%, 1.4%, 0) scale(1.13); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-mind-theme="deepspace"] body::before { animation: none; }
 }
