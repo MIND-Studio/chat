@@ -23,7 +23,7 @@ Pre-implementation research conducted 2026-05-26. Three parallel agents surveyed
 | Prototype | Dev port | CSS port(s) |
 |---|---|---|
 | `mind-market-v0` | 3000 | 3001, 3002 |
-| `mind-codespaces-v0` | 3010 | 3011 |
+| `codespaces` | 3010 | 3011 |
 | `mind-os-v0` | 3020 | 3021 |
 | **`chat`** (this) | **3030** | **3031, 3032** |
 | `mind-social-network-v0` | 3050 | 3051, 3052 |

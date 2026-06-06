@@ -1,7 +1,7 @@
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-2xl px-6 py-16 space-y-4">
-      <h1 className="text-3xl font-semibold">about mind-chat-v0</h1>
+      <h1 className="text-3xl font-semibold">about chat</h1>
       <p>
         This is a prototype. Two users (alice on port 3031, bob on port 3032) each have a Solid pod
         backed by Community Solid Server v7. The chat room <code>chat/general/</code> lives on

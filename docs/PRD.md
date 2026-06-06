@@ -259,7 +259,7 @@ If you need to cut: reactions and edits ship later. Threading can ship later. Do
 
 ## Tech stack
 
-This prototype matches the sibling stack used in `mind-market-v0`, `mind-codespaces-v0`, `mind-os-v0`, and `mind-social-network-v0` so the prototypes share infrastructure and a single WebID can move between them.
+This prototype matches the sibling stack used in `mind-market-v0`, `codespaces`, `mind-os-v0`, and `mind-social-network-v0` so the prototypes share infrastructure and a single WebID can move between them.
 
 - **Pod server:** [CommunitySolidServer](https://github.com/CommunitySolidServer/CommunitySolidServer) v7. Two instances (alice on 3031, bob on 3032) for the dev environment.
 - **Frontend:** Next.js 16.2.6 + React 19.2.4 + TypeScript (App Router; SSR for shareable public-room landing pages).
@@ -299,7 +299,7 @@ In rough order of value:
 6. **Voice notes.** Audio blobs in `uploads/`. The long-chat spec doesn't model audio; needs a small vocab extension.
 7. **Mobile native apps.** Solid OIDC on mobile is rougher than the web; once the web app is stable, port.
 8. **Group video calls.** Out of architectural scope without a STUN/TURN service. Probably a separate prototype.
-9. **Mind ecosystem cross-links.** A "chat with the seller" button in `mind-market-v0`. A "talk to your code reviewer" button in `mind-codespaces-v0`. Profile linking across prototypes — your WebID is your identity, not your per-app account.
+9. **Mind ecosystem cross-links.** A "chat with the seller" button in `mind-market-v0`. A "talk to your code reviewer" button in `codespaces`. Profile linking across prototypes — your WebID is your identity, not your per-app account.
 
 The MVP is designed so each of these is additive, not a rewrite.
 

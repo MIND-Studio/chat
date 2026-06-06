@@ -3,7 +3,7 @@
 Plan to take `chat` from a dev-only prototype to a shipped app in the
 [`mindpods-infra`](../../mindpods-infra) fleet, alongside dock / drive / builder /
 codespaces. It mirrors exactly what those four already do — copy from
-`mind-drive-v0` (Dockerfile + `release.yml`) and follow
+`drive` (Dockerfile + `release.yml`) and follow
 [`mindpods-infra/docs/APP-DOCKERFILE.md`](../../mindpods-infra/docs/APP-DOCKERFILE.md).
 
 Status (2026-06-02): **not shippable yet.** No Dockerfile, no `output: "standalone"`,
@@ -76,7 +76,7 @@ export default nextConfig;
 
 ### A3. Prod Dockerfile
 
-Copy `mind-drive-v0/Dockerfile` verbatim and swap the build-args block for chat's.
+Copy `drive/Dockerfile` verbatim and swap the build-args block for chat's.
 Two-stage `node:22-bookworm-slim`, `.npmrc` + `NODE_AUTH_TOKEN` BuildKit secret for
 `@mind-studio/*` from GitHub Packages, standalone runtime as `node` user on `:3000`.
 The chat-specific `ARG`/`ENV` block:
@@ -110,7 +110,7 @@ ENV NEXT_PUBLIC_APP_DOCK_URL=$NEXT_PUBLIC_APP_DOCK_URL \
 
 ### A4. Release CI
 
-Copy `mind-drive-v0/.github/workflows/release.yml` to
+Copy `drive/.github/workflows/release.yml` to
 `.github/workflows/release.yml`. Change:
 
 - `IMAGE_NAME: mind-chat`

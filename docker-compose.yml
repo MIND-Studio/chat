@@ -1,4 +1,4 @@
-# mind-chat-v0 — dev compose
+# chat — dev compose
 #
 # Single CommunitySolidServer v7 instance on port 3031 hosting both demo
 # personas (alice and bob). This matches the v0 scope in docs/PRD.md:
@@ -10,9 +10,9 @@
 #
 # Ports use the 303x decade to coexist with sibling prototypes:
 #   - mind-market-v0       300x
-#   - mind-codespaces-v0   301x
+#   - codespaces           301x
 #   - mind-os-v0           302x
-#   - mind-chat-v0         303x  ← this stack (3030 app + 3031 CSS)
+#   - chat                 303x  ← this stack (3030 app + 3031 CSS)
 #   - mind-social-network  305x
 
 services:
