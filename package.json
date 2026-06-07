@@ -15,7 +15,8 @@
     "smoke:roundtrip": "tsx scripts/smoke-roundtrip.ts",
     "smoke:ui": "tsx scripts/smoke-ui.ts",
     "chat:watch": "tsx scripts/chat-watch.ts",
-    "chat:send": "tsx scripts/chat-send.ts"
+    "chat:send": "tsx scripts/chat-send.ts",
+    "seed:feedback:all": "tsx scripts/seed-feedback-inboxes-all.ts"
   },
   "dependencies": {
     "@inrupt/solid-client": "^3.0.0",
