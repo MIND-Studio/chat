@@ -25,3 +25,11 @@ This prototype runs on Solid pods. **Never invent a central database for users, 
 
 **Presence is not a protocol primitive.** If a feature asks for "online status," push back to the spec — Solid has no presence layer. The acceptable substitute is a per-user `presence.ttl` with `dct:modified` heartbeats; "online" = modified in the last 60s. Anything fancier needs an explicit design discussion before coding.
 <!-- END:mind-chat-rules -->
+
+## Commits & releases
+
+Use [Conventional Commits](https://www.conventionalcommits.org) on `main`
+(`fix:` → patch, `feat:` → minor, `feat!:` / `BREAKING CHANGE:` → major). Releases,
+tags, and `CHANGELOG.md` are automated by **release-please** — never tag manually
+or hand-edit `CHANGELOG.md`. To cut a release, merge the open
+"chore(main): release X.Y.Z" PR. See the README's Releases section.

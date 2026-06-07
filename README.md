@@ -90,3 +90,19 @@ This prototype is part of the Mind ecosystem and shares its stack (Next.js 16 + 
 - [codespaces](https://github.com/MIND-Studio/codespaces) — privacy-first dev environments
 
 A single WebID can move between all of them.
+
+## Releases
+
+Versioning, `CHANGELOG.md`, and tags are automated with
+[release-please](https://github.com/googleapis/release-please) — **don't tag or
+edit `CHANGELOG.md` by hand.**
+
+1. Commit to `main` using [Conventional Commits](https://www.conventionalcommits.org):
+   `fix:` → patch, `feat:` → minor, `feat!:` / `BREAKING CHANGE:` → major.
+   `chore:` / `docs:` / `refactor:` / `test:` don't trigger a release.
+2. release-please keeps an open **"chore(main): release X.Y.Z"** PR that rolls the
+   pending commits into `CHANGELOG.md` and bumps the version.
+3. Merge that PR to release: it creates the `vX.Y.Z` tag + GitHub Release, which
+   fires `release.yml` to build and push the Docker image to GHCR.
+4. Deploying the image to production is a separate, manual GitOps step in
+   [`mindpods-infra`](https://github.com/MIND-Studio/mindpods-infra) (`mind-deploy.sh`).
