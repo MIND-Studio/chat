@@ -4,14 +4,14 @@
  */
 
 const TARGETS = [
-  { name: "css-root", url: "http://localhost:3031/" },
-  { name: "alice-pod", url: "http://localhost:3031/alice/" },
-  { name: "bob-pod", url: "http://localhost:3031/bob/" },
-  { name: "alice-profile", url: "http://localhost:3031/alice/profile/card" },
-  { name: "bob-profile", url: "http://localhost:3031/bob/profile/card" },
+  { name: "css-root", url: "http://localhost:3011/" },
+  { name: "alice-pod", url: "http://localhost:3011/alice/" },
+  { name: "bob-pod", url: "http://localhost:3011/bob/" },
+  { name: "alice-profile", url: "http://localhost:3011/alice/profile/card" },
+  { name: "bob-profile", url: "http://localhost:3011/bob/profile/card" },
   {
     name: "storage-desc",
-    url: "http://localhost:3031/alice/.well-known/solid",
+    url: "http://localhost:3011/alice/.well-known/solid",
   },
 ];
 

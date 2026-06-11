@@ -30,6 +30,15 @@ export function useSession(): {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      // Restoring a session does a silent-auth redirect through /login/callback,
+      // which then bounces to a fixed route. Remember where we actually were so
+      // the callback can send us back (e.g. a deep link to /feedback).
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname;
+        if (path !== "/" && !path.startsWith("/login")) {
+          sessionStorage.setItem("mind:returnTo", path);
+        }
+      }
       try {
         await handleIncomingRedirect({ restorePreviousSession: true });
       } catch {

@@ -17,7 +17,10 @@ export default function CallbackPage() {
         console.error("OIDC callback failed", err);
       }
       if (!cancelled) {
-        router.replace("/chat");
+        // Return to the route that initiated sign-in, if any (set in useSession).
+        const dest = sessionStorage.getItem("mind:returnTo") ?? "/chat";
+        sessionStorage.removeItem("mind:returnTo");
+        router.replace(dest);
       }
     })();
     return () => {

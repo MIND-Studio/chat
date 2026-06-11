@@ -1,10 +1,10 @@
 # Deploying mind-chat to `chat.mindpods.org`
 
 Plan to take `chat` from a dev-only prototype to a shipped app in the
-[`mindpods-infra`](../../mindpods-infra) fleet, alongside dock / drive / builder /
+[`mindpods-infra`](../../../mindpods-infra) fleet, alongside dock / drive / builder /
 codespaces. It mirrors exactly what those four already do — copy from
 `drive` (Dockerfile + `release.yml`) and follow
-[`mindpods-infra/docs/APP-DOCKERFILE.md`](../../mindpods-infra/docs/APP-DOCKERFILE.md).
+[`mindpods-infra/docs/APP-DOCKERFILE.md`](../../../mindpods-infra/docs/APP-DOCKERFILE.md).
 
 Status (2026-06-02): **not shippable yet.** No Dockerfile, no `output: "standalone"`,
 no CI, not wired into infra. This doc is the to-do list.

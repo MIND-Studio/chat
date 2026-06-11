@@ -12,12 +12,12 @@ See [`docs/PRD.md`](./docs/PRD.md) for the full spec and [`docs/research-notes.m
 
 ## Dev setup
 
-Two services: the Next.js app (port 3030) and a single CommunitySolidServer instance (port 3031) hosting both demo personas (alice + bob). Both personas share the same OIDC issuer; cross-server federation is deferred to v1.
+Two services: the Next.js app (port 3030) and the **shared Mind CommunitySolidServer** on `:3011` (run once at the workspace root — see [`../../SOLID-SERVER.md`](../../SOLID-SERVER.md)) hosting both demo personas (alice + bob). Both personas share the same OIDC issuer; cross-server federation (a 2nd CSS for bob) is deferred to v1.
 
 ### Start the stack
 
 ```bash
-docker compose up -d        # bring up the CSS pod host
+(cd ../.. && docker compose up -d)        # shared Mind CSS on :3011 (once for all apps)
 export NODE_AUTH_TOKEN=$(gh auth token)   # @mind-studio/* come from GitHub Packages
 npm install                 # one-time
 npm run dev                 # start Next.js on http://localhost:3030
@@ -34,9 +34,9 @@ npm run dev                 # start Next.js on http://localhost:3030
 URLs:
 
 - App: <http://localhost:3030/>
-- CSS pod host: <http://localhost:3031/>
-- Alice's pod: <http://localhost:3031/alice/>
-- Bob's pod: <http://localhost:3031/bob/>
+- CSS pod host (shared): <http://localhost:3011/>
+- Alice's pod: <http://localhost:3011/alice/>
+- Bob's pod: <http://localhost:3011/bob/>
 
 ### Seed the demo room
 
@@ -58,9 +58,9 @@ npm run smoke:ui            # Browser-level: two headless contexts (alice + bob)
 
 ### Resetting dev state
 
-`docker compose down` stops the CSS service but keeps the `css-data` named volume. Run `docker compose down -v` only when you want a clean slate — that wipes all pod data and you'll need to re-run `npm run seed:demo`.
+From the workspace root, `docker compose down` stops the shared CSS but keeps `./.css-data`. Run `docker compose down -v` only when you want a clean slate — that wipes all pod data and you'll need to re-run `npm run seed:demo`.
 
-> **Port note:** This prototype uses **3030/3031** to coexist with the sibling stacks (market on 300x, codespaces on 301x, os on 302x, social-network on 305x). Each prototype gets its own decade so any two can run side-by-side.
+> **Port note:** The app uses **3030**; the pod host is the shared Mind CSS on **3011** (no longer a per-app `:3031`). App ports get their own decade per prototype so any two can run side-by-side.
 
 ## What's on the pod
 

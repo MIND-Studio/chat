@@ -19,7 +19,7 @@ import {
   type SubscriptionState,
 } from "@/lib/solid/chat-subscription";
 import { addRoomMember, listRoomMembers } from "@/lib/solid/chat-acl";
-import { roomUrl as DEMO_ROOM_URL } from "@/lib/config";
+import { roomUrl as DEMO_ROOM_URL, feedbackInbox } from "@/lib/config";
 import { MessageList } from "@/components/MessageList";
 import { Composer } from "@/components/Composer";
 import { ConnectionStatus, type ConnState } from "@/components/ConnectionStatus";
@@ -29,6 +29,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { shortName } from "@/lib/util/format";
 import { computeParticipants } from "@/lib/util/participants";
 import { Button } from "@mind-studio/ui";
+import { FeedbackWidget } from "@mind-studio/core/feedback";
 
 export default function ChatPage() {
   const { webid, loggedIn, loading, fetch: authFetch, signOut } = useSession();
@@ -265,6 +266,12 @@ export default function ChatPage() {
             >
               {webid ? shortName(webid) : ""}
             </span>
+            <FeedbackWidget
+              appKey="chat"
+              inbox={feedbackInbox}
+              fetch={authFetch}
+              webId={webid}
+            />
             <ThemeToggle />
             {/* The sidebar (which holds the only "disconnect" control) is hidden
                 below md, so surface sign-out in the header on mobile. */}
