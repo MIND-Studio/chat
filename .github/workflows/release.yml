@@ -75,9 +75,9 @@ jobs:
             NEXT_PUBLIC_ROOM_URL=https://pods.mindpods.org/mind/chat/general
             NEXT_PUBLIC_PERSONA_A_NAME=Mind
             NEXT_PUBLIC_PERSONA_B_NAME=Chat Bob
-            NEXT_PUBLIC_APP_DOCK_URL=https://dock.mindpods.org
-            NEXT_PUBLIC_APP_DRIVE_URL=https://drive.mindpods.org
-            NEXT_PUBLIC_APP_BUILDER_URL=https://builder.mindpods.org
+            NEXT_PUBLIC_APP_DOCK_URL=https://dock.apps.mindpods.org
+            NEXT_PUBLIC_APP_DRIVE_URL=https://drive.apps.mindpods.org
+            NEXT_PUBLIC_APP_BUILDER_URL=https://builder.apps.mindpods.org
             NEXT_PUBLIC_APP_CODESPACES_URL=https://codespaces.mindpods.org
             NEXT_PUBLIC_FEEDBACK_INBOX=https://pods.mindpods.org/mind/chat-feedback/
           secrets: |
