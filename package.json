@@ -23,7 +23,7 @@
     "@inrupt/solid-client-authn-browser": "^4.0.0",
     "@inrupt/solid-client-authn-node": "^3.1.1",
     "@inrupt/solid-client-notifications": "^4.0.0",
-    "@mind-studio/core": "^0.2.0",
+    "@mind-studio/core": "^0.5.0",
     "@mind-studio/ui": "^0.1.0",
     "dotenv": "^17.4.2",
     "next": "16.2.6",
