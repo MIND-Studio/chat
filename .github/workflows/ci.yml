@@ -18,10 +18,17 @@ jobs:
         with:
           node-version: 22
       # Installs @mind-studio/* from GitHub Packages via the committed .npmrc.
+      # GITHUB_TOKEN can read public packages in the same MIND-Studio org; if a
+      # cross-repo read is ever refused, set a NODE_AUTH_TOKEN secret to an org
+      # PAT with read:packages.
       - run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.GITHUB_TOKEN }}
+      # Lint + format gate (Biome). Fails on errors; warnings are the
+      # documented legacy baseline tracked in biome.json.
+      - run: npx biome ci .
       - run: npx tsc --noEmit
+      - run: npm run test
       - run: npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.GITHUB_TOKEN }}
