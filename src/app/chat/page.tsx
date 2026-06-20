@@ -1,35 +1,35 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { FeedbackWidget } from "@mind-studio/core/feedback";
+import { Button } from "@mind-studio/ui";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/solid/session";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Composer } from "@/components/Composer";
+import { ConnectionStatus, type ConnState } from "@/components/ConnectionStatus";
+import { MembersSheet } from "@/components/MembersSheet";
+import { MessageList } from "@/components/MessageList";
+import { RoomSidebar } from "@/components/RoomSidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { roomUrl as DEMO_ROOM_URL, feedbackInbox } from "@/lib/config";
 import {
+  type ChatMessage,
   deleteMessage,
   editMessage,
   listTodayMessages,
   postMessage,
+  type RoomMeta,
   readRoomMeta,
   toggleReaction,
-  type ChatMessage,
-  type RoomMeta,
 } from "@/lib/solid/chat";
+import { addRoomMember, listRoomMembers } from "@/lib/solid/chat-acl";
 import {
-  subscribeToRoom,
   type SubscriptionHandle,
   type SubscriptionState,
+  subscribeToRoom,
 } from "@/lib/solid/chat-subscription";
-import { addRoomMember, listRoomMembers } from "@/lib/solid/chat-acl";
-import { roomUrl as DEMO_ROOM_URL, feedbackInbox } from "@/lib/config";
-import { MessageList } from "@/components/MessageList";
-import { Composer } from "@/components/Composer";
-import { ConnectionStatus, type ConnState } from "@/components/ConnectionStatus";
-import { RoomSidebar } from "@/components/RoomSidebar";
-import { MembersSheet } from "@/components/MembersSheet";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { useSession } from "@/lib/solid/session";
 import { shortName } from "@/lib/util/format";
 import { computeParticipants } from "@/lib/util/participants";
-import { Button } from "@mind-studio/ui";
-import { FeedbackWidget } from "@mind-studio/core/feedback";
 
 export default function ChatPage() {
   const { webid, loggedIn, loading, fetch: authFetch, signOut } = useSession();
@@ -233,7 +233,9 @@ export default function ChatPage() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-[color:var(--text-faint)]">#</span>
-              <span className="text-sm font-semibold">{meta?.title?.toLowerCase() ?? "general"}</span>
+              <span className="text-sm font-semibold">
+                {meta?.title?.toLowerCase() ?? "general"}
+              </span>
               <span className="ml-2 hidden font-mono text-[9px] uppercase tracking-[0.25em] text-[color:var(--text-faint)] sm:inline">
                 long-chat · ws2023
               </span>
@@ -266,12 +268,7 @@ export default function ChatPage() {
             >
               {webid ? shortName(webid) : ""}
             </span>
-            <FeedbackWidget
-              appKey="chat"
-              inbox={feedbackInbox}
-              fetch={authFetch}
-              webId={webid}
-            />
+            <FeedbackWidget appKey="chat" inbox={feedbackInbox} fetch={authFetch} webId={webid} />
             <ThemeToggle />
             {/* The sidebar (which holds the only "disconnect" control) is hidden
                 below md, so surface sign-out in the header on mobile. */}

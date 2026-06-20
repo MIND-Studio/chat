@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Button,
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuTrigger,
   useMindTheme,
 } from "@mind-studio/ui";
+import { useEffect, useState } from "react";
 import { useBrand } from "@/components/theme-shell";
 
 /**
@@ -32,13 +32,7 @@ export function ThemeToggle() {
   useEffect(() => setMounted(true), []);
 
   const mode = mounted && resolvedMode === "dark" ? "dark" : "light";
-  const glyph = !mounted
-    ? "◐"
-    : brand === "deepspace"
-      ? "✦"
-      : mode === "dark"
-        ? "☾"
-        : "☀";
+  const glyph = !mounted ? "◐" : brand === "deepspace" ? "✦" : mode === "dark" ? "☾" : "☀";
 
   return (
     <DropdownMenu>

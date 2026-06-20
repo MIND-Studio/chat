@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { FeedbackEntry, FeedbackKind, Sentiment } from "@mind-studio/core/feedback";
+import { readFeedback } from "@mind-studio/core/feedback";
+import { Button } from "@mind-studio/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/solid/session";
-import { feedbackInbox } from "@/lib/config";
-import { readFeedback } from "@mind-studio/core/feedback";
-import type { FeedbackEntry, Sentiment, FeedbackKind } from "@mind-studio/core/feedback";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { shortName, relativeTime, absoluteTime } from "@/lib/util/format";
-import { Button } from "@mind-studio/ui";
+import { feedbackInbox } from "@/lib/config";
+import { useSession } from "@/lib/solid/session";
+import { absoluteTime, relativeTime, shortName } from "@/lib/util/format";
 
 const FACE: Record<Sentiment, string> = { bad: "😞", meh: "😐", good: "🙂", love: "😍" };
 const KIND_ICON: Record<FeedbackKind, string> = {
@@ -257,7 +257,10 @@ export default function FeedbackInboxPage() {
       )}
 
       <footer className="mt-10 font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-faint)]">
-        <Link href="/chat" className="underline-offset-2 hover:text-[color:var(--cyan)] hover:underline">
+        <Link
+          href="/chat"
+          className="underline-offset-2 hover:text-[color:var(--cyan)] hover:underline"
+        >
           ← back to chat
         </Link>
       </footer>
@@ -305,13 +308,7 @@ function Stat({ label, value }: { label: string; value: number }) {
 function EntryCard({ e }: { e: FeedbackEntry }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const hasDetail = !!(
-    e.userAgent ||
-    e.appVersion ||
-    e.clientErrors ||
-    e.screenshot ||
-    e.target
-  );
+  const hasDetail = !!(e.userAgent || e.appVersion || e.clientErrors || e.screenshot || e.target);
 
   async function copyJson() {
     try {
@@ -428,13 +425,10 @@ function EntryCard({ e }: { e: FeedbackEntry }) {
               <dd className="break-all">
                 🎯 {e.target.label}
                 <span className="opacity-60"> — {e.target.selector}</span>
-                {e.target.text ? (
-                  <span className="opacity-60"> · “{e.target.text}”</span>
-                ) : null}
+                {e.target.text ? <span className="opacity-60"> · “{e.target.text}”</span> : null}
                 <span className="opacity-50">
                   {" "}
-                  · {e.target.rect.w}×{e.target.rect.h} @ {e.target.rect.x},
-                  {e.target.rect.y}
+                  · {e.target.rect.w}×{e.target.rect.h} @ {e.target.rect.x},{e.target.rect.y}
                 </span>
               </dd>
             </>

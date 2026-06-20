@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Button, Input } from "@mind-studio/ui";
+import { useEffect, useRef, useState } from "react";
 
 export function InvitePanel({
   onInvite,

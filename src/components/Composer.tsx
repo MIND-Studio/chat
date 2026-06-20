@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Textarea } from "@mind-studio/ui";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MENTION_PREFIX_RE, matchMentions } from "@/lib/util/mentions";
 
 const MAX_LEN = 4000;

@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useStandaloneSession,
-  type UseStandaloneSessionResult,
-} from "@mind-studio/core/solid";
+import { type UseStandaloneSessionResult, useStandaloneSession } from "@mind-studio/core/solid";
 
 /**
  * Thin wrapper over the shared provider-free session hook from

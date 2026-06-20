@@ -1,17 +1,11 @@
 "use client";
 
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@mind-studio/ui";
 import { useMemo } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@mind-studio/ui";
+import type { ChatMessage, RoomMeta } from "@/lib/solid/chat";
+import { computeParticipants } from "@/lib/util/participants";
 import { InvitePanel } from "./InvitePanel";
 import { MemberList } from "./MemberList";
-import { computeParticipants } from "@/lib/util/participants";
-import type { ChatMessage, RoomMeta } from "@/lib/solid/chat";
 
 /**
  * Mobile-only slide-over that surfaces the room's members, which otherwise live
@@ -45,7 +39,12 @@ export function MembersSheet({
   );
 
   return (
-    <Sheet open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+    <Sheet
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
       <SheetContent
         side="left"
         aria-label="Room members"

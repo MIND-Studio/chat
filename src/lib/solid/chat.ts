@@ -1,4 +1,5 @@
 import {
+  asUrl,
   buildThing,
   createSolidDataset,
   createThing,
@@ -11,7 +12,6 @@ import {
   removeThing,
   saveSolidDatasetAt,
   setThing,
-  asUrl,
 } from "@inrupt/solid-client";
 import { ulid } from "@/lib/util/ulid";
 
@@ -122,10 +122,7 @@ export async function ensureRoom(
  * Required before subscribing to it via WebSocketChannel2023, since CSS
  * 404s notification subscriptions on nonexistent resources.
  */
-export async function ensureTodayFile(
-  roomUrl: string,
-  fetch: AuthenticatedFetch,
-): Promise<string> {
+export async function ensureTodayFile(roomUrl: string, fetch: AuthenticatedFetch): Promise<string> {
   const dayUrl = dayFileUrl(roomUrl);
   try {
     await getSolidDataset(dayUrl, { fetch });
@@ -413,8 +410,7 @@ export async function editMessage(
   await saveSolidDatasetAt(dayUrl, dataset, { fetch });
 
   // Read the original's created timestamp for return value.
-  const origCreated =
-    getDatetime(original, DCT_CREATED) ?? createdAt;
+  const origCreated = getDatetime(original, DCT_CREATED) ?? createdAt;
 
   return {
     url: originalMessageUrl,

@@ -1,7 +1,7 @@
 "use client";
 
-import { dayFileUrl, ensureTodayFile, type AuthenticatedFetch } from "./chat";
 import { log } from "@/lib/util/log";
+import { type AuthenticatedFetch, dayFileUrl, ensureTodayFile } from "./chat";
 
 export type SubscriptionState = "connecting" | "connected" | "polling" | "error";
 
@@ -42,14 +42,11 @@ async function discoverSubscriptionEndpoint(
     if (!descRes.ok) return fallback;
     const desc = (await descRes.json()) as Array<Record<string, unknown>>;
     for (const node of desc) {
-      const channelType = (node[
-        "http://www.w3.org/ns/solid/notifications#channelType"
-      ] ?? []) as Array<{ "@id"?: string }>;
+      const channelType = (node["http://www.w3.org/ns/solid/notifications#channelType"] ??
+        []) as Array<{ "@id"?: string }>;
       if (
         channelType.some(
-          (c) =>
-            c["@id"] ===
-            "http://www.w3.org/ns/solid/notifications#WebSocketChannel2023",
+          (c) => c["@id"] === "http://www.w3.org/ns/solid/notifications#WebSocketChannel2023",
         )
       ) {
         const id = node["@id"];

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { handleIncomingRedirect } from "@inrupt/solid-client-authn-browser";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CallbackPage() {
   const router = useRouter();

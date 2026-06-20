@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import { ThemeProvider } from "@mind-studio/ui";
 import { mind } from "@mind-studio/ui/themes";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { deepspace } from "@/lib/theme/deepspace";
 
 export type Brand = "mind" | "deepspace";

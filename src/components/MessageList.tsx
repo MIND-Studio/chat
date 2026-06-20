@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@mind-studio/ui";
-import { REACTION_EMOJI, type ChatMessage } from "@/lib/solid/chat";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { type ChatMessage, REACTION_EMOJI } from "@/lib/solid/chat";
 import { absoluteTime, colorForKey, relativeTime, shortName } from "@/lib/util/format";
 import { buildHandleMap } from "@/lib/util/mentions";
 import { Avatar } from "./Avatar";
@@ -93,10 +93,7 @@ export function MessageList({
 
   if (messages.length === 0) {
     return (
-      <div
-        ref={scrollerRef}
-        className="flex flex-1 items-center justify-center px-6 text-center"
-      >
+      <div ref={scrollerRef} className="flex flex-1 items-center justify-center px-6 text-center">
         <div className="max-w-sm">
           <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-[color:var(--text-faint)]">
             // signal idle
@@ -117,239 +114,238 @@ export function MessageList({
         data-testid="message-list"
       >
         <ul className="flex flex-col gap-0.5">
-        {messages.map((m, i) => {
-          const prev = i > 0 ? messages[i - 1] : undefined;
-          const newGroup =
-            !prev ||
-            prev.author !== m.author ||
-            Date.parse(m.createdAtIso) - Date.parse(prev.createdAtIso) > GROUP_WINDOW_MS;
-          const isMine = m.author === selfWebid;
-          const accent = colorForKey(m.author);
-          const isEditing = editingUrl === m.url;
-          // Whether the *next* message opens a new group — used so a run of
-          // own messages renders as one continuous tinted block (rounded only
-          // at the group's top and bottom) rather than separate segments.
-          const next = messages[i + 1];
-          const lastInGroup =
-            !next ||
-            next.author !== m.author ||
-            Date.parse(next.createdAtIso) - Date.parse(m.createdAtIso) > GROUP_WINDOW_MS;
+          {messages.map((m, i) => {
+            const prev = i > 0 ? messages[i - 1] : undefined;
+            const newGroup =
+              !prev ||
+              prev.author !== m.author ||
+              Date.parse(m.createdAtIso) - Date.parse(prev.createdAtIso) > GROUP_WINDOW_MS;
+            const isMine = m.author === selfWebid;
+            const accent = colorForKey(m.author);
+            const isEditing = editingUrl === m.url;
+            // Whether the *next* message opens a new group — used so a run of
+            // own messages renders as one continuous tinted block (rounded only
+            // at the group's top and bottom) rather than separate segments.
+            const next = messages[i + 1];
+            const lastInGroup =
+              !next ||
+              next.author !== m.author ||
+              Date.parse(next.createdAtIso) - Date.parse(m.createdAtIso) > GROUP_WINDOW_MS;
 
-          return (
-            <li
-              key={m.url}
-              data-testid="message"
-              className={`group flex gap-3 ${newGroup ? "mt-4" : isMine ? "mt-0" : "mt-px"}`}
-            >
-              <div className="w-9 shrink-0">
-                {newGroup ? <Avatar webid={m.author} size={36} /> : null}
-              </div>
-              <div
-                className={`min-w-0 flex-1 ${
-                  isMine
-                    ? `border-l-2 border-[color:var(--cyan)] bg-[color:var(--cyan-soft)] px-3 ${
-                        newGroup ? "rounded-t-md pt-1.5" : "pt-0.5"
-                      } ${lastInGroup ? "rounded-b-md pb-1.5" : "pb-0.5"}`
-                    : ""
-                }`}
+            return (
+              <li
+                key={m.url}
+                data-testid="message"
+                className={`group flex gap-3 ${newGroup ? "mt-4" : isMine ? "mt-0" : "mt-px"}`}
               >
-                {newGroup ? (
-                  <div className="mb-1 flex items-baseline gap-2">
-                    <span
-                      className="author-color text-sm font-semibold"
-                      style={{ "--author-color": accent } as React.CSSProperties}
-                    >
-                      {shortName(m.author)}
-                      {isMine ? (
-                        <span className="ml-1 font-mono text-[9px] font-normal uppercase tracking-widest text-[color:var(--text-faint)]">
-                          [you]
+                <div className="w-9 shrink-0">
+                  {newGroup ? <Avatar webid={m.author} size={36} /> : null}
+                </div>
+                <div
+                  className={`min-w-0 flex-1 ${
+                    isMine
+                      ? `border-l-2 border-[color:var(--cyan)] bg-[color:var(--cyan-soft)] px-3 ${
+                          newGroup ? "rounded-t-md pt-1.5" : "pt-0.5"
+                        } ${lastInGroup ? "rounded-b-md pb-1.5" : "pb-0.5"}`
+                      : ""
+                  }`}
+                >
+                  {newGroup ? (
+                    <div className="mb-1 flex items-baseline gap-2">
+                      <span
+                        className="author-color text-sm font-semibold"
+                        style={{ "--author-color": accent } as React.CSSProperties}
+                      >
+                        {shortName(m.author)}
+                        {isMine ? (
+                          <span className="ml-1 font-mono text-[9px] font-normal uppercase tracking-widest text-[color:var(--text-faint)]">
+                            [you]
+                          </span>
+                        ) : null}
+                      </span>
+                      <span
+                        className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-faint)]"
+                        title={absoluteTime(m.createdAtIso)}
+                      >
+                        {relativeTime(m.createdAtIso, now)}
+                      </span>
+                      {m.editedAtIso && !m.deletedAtIso ? (
+                        <span
+                          className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]"
+                          title={`edited ${absoluteTime(m.editedAtIso)}`}
+                        >
+                          · edited
                         </span>
                       ) : null}
-                    </span>
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-faint)]"
-                      title={absoluteTime(m.createdAtIso)}
-                    >
-                      {relativeTime(m.createdAtIso, now)}
-                    </span>
-                    {m.editedAtIso && !m.deletedAtIso ? (
-                      <span
-                        className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]"
-                        title={`edited ${absoluteTime(m.editedAtIso)}`}
-                      >
-                        · edited
-                      </span>
-                    ) : null}
-                  </div>
-                ) : null}
-                {m.deletedAtIso ? (
-                  <div
-                    data-testid="message-body"
-                    className="italic text-[color:var(--text-faint)]"
-                  >
-                    // message deleted
-                  </div>
-                ) : isEditing && onEdit ? (
-                  <EditInline
-                    initial={m.body}
-                    onCancel={() => setEditingUrl(null)}
-                    onSave={async (next) => {
-                      await onEdit(m, next);
-                      setEditingUrl(null);
-                    }}
-                  />
-                ) : (
-                  <div className="relative">
+                    </div>
+                  ) : null}
+                  {m.deletedAtIso ? (
                     <div
                       data-testid="message-body"
-                      className="min-w-0 break-words text-sm"
+                      className="italic text-[color:var(--text-faint)]"
                     >
-                      <MessageBody body={m.body} mentions={mentionMap} selfHandle={selfHandle} />
+                      // message deleted
                     </div>
-                    {onEdit || onDelete || onReact ? (
-                      <div className="absolute bottom-full right-0 z-[2] mb-0.5 hidden items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--glass-strong)] px-1 py-0.5 shadow-sm backdrop-blur-md group-hover:flex">
-                        {onReact ? (
-                          <div className="relative">
-                            <Button
-                              variant="ghost"
-                              onClick={() => setPickerForUrl(pickerForUrl === m.url ? null : m.url)}
-                              className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)]"
-                              title="react"
-                              aria-label="Add reaction"
-                            >
-                              <span aria-hidden>☺</span>
-                            </Button>
-                            {pickerForUrl === m.url ? (
-                              <div className="absolute right-0 top-full z-10 mt-1 flex gap-1 rounded-md border border-[color:var(--border-strong)] bg-[color:var(--glass-strong)] px-1.5 py-1 backdrop-blur-md">
-                                {REACTION_EMOJI.map((e) => (
-                                  <button
-                                    key={e}
-                                    onClick={async () => {
-                                      setPickerForUrl(null);
-                                      try {
-                                        await onReact(m, e);
-                                      } catch (err) {
-                                        // eslint-disable-next-line no-console
-                                        console.error("react failed", err);
-                                      }
-                                    }}
-                                    className="text-base leading-none transition hover:scale-125"
-                                  >
-                                    {e}
-                                  </button>
-                                ))}
-                              </div>
-                            ) : null}
-                          </div>
-                        ) : null}
-                        {isMine && onEdit ? (
-                          <Button
-                            variant="ghost"
-                            onClick={() => setEditingUrl(m.url)}
-                            className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)]"
-                            title="edit"
-                          >
-                            edit
-                          </Button>
-                        ) : null}
-                        {isMine && onDelete ? (
-                          confirmDeleteUrl === m.url ? (
-                            <>
-                              <span className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]">
-                                delete?
-                              </span>
-                              <Button
-                                variant="ghost"
-                                onClick={async () => {
-                                  setConfirmDeleteUrl(null);
-                                  try {
-                                    await onDelete(m);
-                                  } catch (err) {
-                                    // eslint-disable-next-line no-console
-                                    console.error("delete failed", err);
-                                  }
-                                }}
-                                className="h-auto rounded border border-[color:var(--red)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--red)] hover:bg-[color:var(--red)]/10"
-                                title="confirm delete"
-                                aria-label="Confirm delete"
-                              >
-                                <span aria-hidden>✓</span> yes
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                onClick={() => setConfirmDeleteUrl(null)}
-                                className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--text-muted)] hover:text-[color:var(--text-muted)]"
-                                title="cancel delete"
-                                aria-label="Cancel delete"
-                              >
-                                <span aria-hidden>✕</span>
-                              </Button>
-                            </>
-                          ) : (
-                            <Button
-                              variant="ghost"
-                              onClick={() => {
-                                setPickerForUrl(null);
-                                setConfirmDeleteUrl(m.url);
-                              }}
-                              className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--red)] hover:text-[color:var(--red)]"
-                              title="delete"
-                            >
-                              delete
-                            </Button>
-                          )
-                        ) : null}
+                  ) : isEditing && onEdit ? (
+                    <EditInline
+                      initial={m.body}
+                      onCancel={() => setEditingUrl(null)}
+                      onSave={async (next) => {
+                        await onEdit(m, next);
+                        setEditingUrl(null);
+                      }}
+                    />
+                  ) : (
+                    <div className="relative">
+                      <div data-testid="message-body" className="min-w-0 break-words text-sm">
+                        <MessageBody body={m.body} mentions={mentionMap} selfHandle={selfHandle} />
                       </div>
-                    ) : null}
-                  </div>
-                )}
-                {m.reactions.length > 0 && !m.deletedAtIso ? (
-                  <div className="mt-1 flex flex-wrap gap-1">
-                    {m.reactions.map((r) => {
-                      const mineReacted = !!r.myReactionUrl;
-                      return (
-                        <button
-                          key={r.emoji}
-                          onClick={async () => {
-                            if (!onReact) return;
-                            try {
-                              await onReact(m, r.emoji);
-                            } catch (err) {
-                              // eslint-disable-next-line no-console
-                              console.error("react toggle failed", err);
-                            }
-                          }}
-                          disabled={!onReact}
-                          title={r.reactors.map(shortName).join(", ")}
-                          className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition ${
-                            mineReacted
-                              ? "border-[color:var(--cyan)] bg-[color:var(--cyan-soft)] text-[color:var(--cyan)]"
-                              : "border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--text-muted)] hover:border-[color:var(--text-muted)]"
-                          }`}
-                        >
-                          <span className="text-sm leading-none">{r.emoji}</span>
-                          <span className="font-mono text-[10px]">{r.reactors.length}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                      {onEdit || onDelete || onReact ? (
+                        <div className="absolute bottom-full right-0 z-[2] mb-0.5 hidden items-center gap-1 rounded-md border border-[color:var(--border)] bg-[color:var(--glass-strong)] px-1 py-0.5 shadow-sm backdrop-blur-md group-hover:flex">
+                          {onReact ? (
+                            <div className="relative">
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  setPickerForUrl(pickerForUrl === m.url ? null : m.url)
+                                }
+                                className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)]"
+                                title="react"
+                                aria-label="Add reaction"
+                              >
+                                <span aria-hidden>☺</span>
+                              </Button>
+                              {pickerForUrl === m.url ? (
+                                <div className="absolute right-0 top-full z-10 mt-1 flex gap-1 rounded-md border border-[color:var(--border-strong)] bg-[color:var(--glass-strong)] px-1.5 py-1 backdrop-blur-md">
+                                  {REACTION_EMOJI.map((e) => (
+                                    <button
+                                      key={e}
+                                      onClick={async () => {
+                                        setPickerForUrl(null);
+                                        try {
+                                          await onReact(m, e);
+                                        } catch (err) {
+                                          // eslint-disable-next-line no-console
+                                          console.error("react failed", err);
+                                        }
+                                      }}
+                                      className="text-base leading-none transition hover:scale-125"
+                                    >
+                                      {e}
+                                    </button>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
+                          {isMine && onEdit ? (
+                            <Button
+                              variant="ghost"
+                              onClick={() => setEditingUrl(m.url)}
+                              className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--cyan)] hover:text-[color:var(--cyan)]"
+                              title="edit"
+                            >
+                              edit
+                            </Button>
+                          ) : null}
+                          {isMine && onDelete ? (
+                            confirmDeleteUrl === m.url ? (
+                              <>
+                                <span className="font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)]">
+                                  delete?
+                                </span>
+                                <Button
+                                  variant="ghost"
+                                  onClick={async () => {
+                                    setConfirmDeleteUrl(null);
+                                    try {
+                                      await onDelete(m);
+                                    } catch (err) {
+                                      // eslint-disable-next-line no-console
+                                      console.error("delete failed", err);
+                                    }
+                                  }}
+                                  className="h-auto rounded border border-[color:var(--red)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--red)] hover:bg-[color:var(--red)]/10"
+                                  title="confirm delete"
+                                  aria-label="Confirm delete"
+                                >
+                                  <span aria-hidden>✓</span> yes
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  onClick={() => setConfirmDeleteUrl(null)}
+                                  className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--text-muted)] hover:text-[color:var(--text-muted)]"
+                                  title="cancel delete"
+                                  aria-label="Cancel delete"
+                                >
+                                  <span aria-hidden>✕</span>
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                onClick={() => {
+                                  setPickerForUrl(null);
+                                  setConfirmDeleteUrl(m.url);
+                                }}
+                                className="h-auto rounded border border-[color:var(--border)] px-1.5 py-0.5 font-mono text-[9px] font-normal uppercase tracking-wider text-[color:var(--text-faint)] hover:border-[color:var(--red)] hover:text-[color:var(--red)]"
+                                title="delete"
+                              >
+                                delete
+                              </Button>
+                            )
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+                  {m.reactions.length > 0 && !m.deletedAtIso ? (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {m.reactions.map((r) => {
+                        const mineReacted = !!r.myReactionUrl;
+                        return (
+                          <button
+                            key={r.emoji}
+                            onClick={async () => {
+                              if (!onReact) return;
+                              try {
+                                await onReact(m, r.emoji);
+                              } catch (err) {
+                                // eslint-disable-next-line no-console
+                                console.error("react toggle failed", err);
+                              }
+                            }}
+                            disabled={!onReact}
+                            title={r.reactors.map(shortName).join(", ")}
+                            className={`flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition ${
+                              mineReacted
+                                ? "border-[color:var(--cyan)] bg-[color:var(--cyan-soft)] text-[color:var(--cyan)]"
+                                : "border-[color:var(--border)] bg-[color:var(--surface-2)] text-[color:var(--text-muted)] hover:border-[color:var(--text-muted)]"
+                            }`}
+                          >
+                            <span className="text-sm leading-none">{r.emoji}</span>
+                            <span className="font-mono text-[10px]">{r.reactors.length}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+                {!isEditing ? (
+                  // Always reserve this w-14 gutter (invisible→visible on hover)
+                  // so revealing the timestamp doesn't shift the message column.
+                  // Group leaders show their time in the header, so the gutter is
+                  // just empty reserved space for them.
+                  <span
+                    className="invisible w-14 shrink-0 self-start pt-px text-right font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)] group-hover:visible"
+                    title={absoluteTime(m.createdAtIso)}
+                  >
+                    {!newGroup ? relativeTime(m.createdAtIso, now) : null}
+                  </span>
                 ) : null}
-              </div>
-              {!isEditing ? (
-                // Always reserve this w-14 gutter (invisible→visible on hover)
-                // so revealing the timestamp doesn't shift the message column.
-                // Group leaders show their time in the header, so the gutter is
-                // just empty reserved space for them.
-                <span
-                  className="invisible w-14 shrink-0 self-start pt-px text-right font-mono text-[9px] uppercase tracking-wider text-[color:var(--text-faint)] group-hover:visible"
-                  title={absoluteTime(m.createdAtIso)}
-                >
-                  {!newGroup ? relativeTime(m.createdAtIso, now) : null}
-                </span>
-              ) : null}
-            </li>
-          );
-        })}
+              </li>
+            );
+          })}
         </ul>
       </div>
       {unseen > 0 ? (

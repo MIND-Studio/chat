@@ -1,4 +1,4 @@
-import { Avatar as UIAvatar, AvatarFallback } from "@mind-studio/ui";
+import { AvatarFallback, Avatar as UIAvatar } from "@mind-studio/ui";
 import { colorForKey, initials, shortName } from "@/lib/util/format";
 
 /**
@@ -20,11 +20,7 @@ export function Avatar({
   const name = shortName(webid);
   const accent = colorForKey(webid);
   return (
-    <UIAvatar
-      title={title ?? webid}
-      style={{ width: size, height: size }}
-      className="shrink-0"
-    >
+    <UIAvatar title={title ?? webid} style={{ width: size, height: size }} className="shrink-0">
       <AvatarFallback
         style={{
           background: `radial-gradient(circle at 30% 30%, ${accent}, ${accent}cc 70%)`,
