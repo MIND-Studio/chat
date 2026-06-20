@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar } from "./Avatar";
 import { colorForKey, shortName } from "@/lib/util/format";
 import type { Participant } from "@/lib/util/participants";
+import { Avatar } from "./Avatar";
 
 /**
  * The members `<ul>` shared by the desktop sidebar and the mobile members sheet.
@@ -29,7 +29,10 @@ export function MemberList({
             <Avatar webid={p.webid} size={28} />
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1 truncate text-sm">
-                <span className="author-color" style={{ "--author-color": accent } as React.CSSProperties}>
+                <span
+                  className="author-color"
+                  style={{ "--author-color": accent } as React.CSSProperties}
+                >
                   {shortName(p.webid)}
                 </span>
                 {p.webid === selfWebid ? (

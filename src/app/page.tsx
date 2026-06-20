@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { MindLoginCard, writeLastIdentity } from "@mind-studio/core";
-import { useSession } from "@/lib/solid/session";
-import { oidcIssuer } from "@/lib/config";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { oidcIssuer } from "@/lib/config";
+import { useSession } from "@/lib/solid/session";
 
 const APP_NAME = "Chat";
 
@@ -59,13 +59,25 @@ export default function HomePage() {
       </p>
 
       <section aria-label="What this prototype is" className="mt-12 grid gap-3 sm:grid-cols-3">
-        <FactCard tag="storage" body="SolidOS long-chat layout. One UTC-dated .ttl per day. Free interop with SolidOS chat-pane." />
-        <FactCard tag="transport" body="WebSocketChannel2023 push notifications, with 2s polling as fallback. Sub-100ms on a fast pod." />
-        <FactCard tag="server" body="Just a static Next.js client. No central message store. ACL on the room container is the only auth." />
+        <FactCard
+          tag="storage"
+          body="SolidOS long-chat layout. One UTC-dated .ttl per day. Free interop with SolidOS chat-pane."
+        />
+        <FactCard
+          tag="transport"
+          body="WebSocketChannel2023 push notifications, with 2s polling as fallback. Sub-100ms on a fast pod."
+        />
+        <FactCard
+          tag="server"
+          body="Just a static Next.js client. No central message store. ACL on the room container is the only auth."
+        />
       </section>
 
       <footer className="mt-10 font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-faint)]">
-        <Link href="/about" className="underline-offset-2 hover:text-[color:var(--cyan)] hover:underline">
+        <Link
+          href="/about"
+          className="underline-offset-2 hover:text-[color:var(--cyan)] hover:underline"
+        >
           → what does this app store?
         </Link>
       </footer>

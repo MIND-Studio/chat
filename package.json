@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start --port 3030",
     "typecheck": "tsc --noEmit",
-    "lint": "next lint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest run --passWithNoTests",
+    "prepare": "husky",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "seed:feedback": "tsx scripts/seed-feedback-inbox.ts",
     "fix:acl": "tsx scripts/fix-room-acl.ts",
@@ -31,6 +35,10 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "vitest": "^4.1.9",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.41",
     "@types/react": "^19.2.15",
@@ -39,5 +47,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc}": "biome check --write --no-errors-on-unmatched"
   }
 }

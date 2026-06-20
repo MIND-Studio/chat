@@ -10,20 +10,26 @@ export default function AboutPage() {
       <h2 className="text-lg font-medium pt-4">What lives where</h2>
       <ul className="list-disc list-inside space-y-1">
         <li>
-          <strong>On alice&apos;s pod:</strong> the room descriptor (<code>chat/general/index.ttl</code>),
-          the WAC ACL (<code>chat/general/.acl</code>), and per-day message files
-          (<code>chat/general/YYYY/MM/DD/chat.ttl</code>) in the{" "}
-          <a className="underline" href="https://solid.github.io/chat/" target="_blank" rel="noreferrer">
+          <strong>On alice&apos;s pod:</strong> the room descriptor (
+          <code>chat/general/index.ttl</code>), the WAC ACL (<code>chat/general/.acl</code>), and
+          per-day message files (<code>chat/general/YYYY/MM/DD/chat.ttl</code>) in the{" "}
+          <a
+            className="underline"
+            href="https://solid.github.io/chat/"
+            target="_blank"
+            rel="noreferrer"
+          >
             SolidOS long-chat layout
           </a>
           .
         </li>
         <li>
-          <strong>On bob&apos;s pod:</strong> his profile and inbox. Bob owns no rooms in this demo — he&apos;s a member of
-          alice&apos;s room via her ACL.
+          <strong>On bob&apos;s pod:</strong> his profile and inbox. Bob owns no rooms in this demo
+          — he&apos;s a member of alice&apos;s room via her ACL.
         </li>
         <li>
-          <strong>On the chat app&apos;s server:</strong> nothing. No message store, no membership table, no analytics.
+          <strong>On the chat app&apos;s server:</strong> nothing. No message store, no membership
+          table, no analytics.
         </li>
       </ul>
       <h2 className="text-lg font-medium pt-4">How real-time works</h2>

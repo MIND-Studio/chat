@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 /**
  * Minimal, dependency-free message renderer:
@@ -101,7 +101,8 @@ function parseBlocks(text: string): Block[] {
 //    like `my_var_name` aren't broken into `my [em]var[/em] name`. Markdown
 //    convention: `_italic_` requires non-word context on both sides.
 // 7: url  8: @mention (must agree with MENTION_RE in lib/util/mentions.ts)
-const INLINE_RE = /(`[^`]+`)|(\*\*\*[^*]+\*\*\*)|(\*\*[^*]+\*\*)|(__[^_]+__)|(\*[^*\s](?:[^*]*[^*\s])?\*)|((?<![A-Za-z0-9])_[^_\s](?:[^_]*[^_\s])?_(?![A-Za-z0-9]))|(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]])|((?<![\w@])@[A-Za-z0-9][A-Za-z0-9._-]*)/g;
+const INLINE_RE =
+  /(`[^`]+`)|(\*\*\*[^*]+\*\*\*)|(\*\*[^*]+\*\*)|(__[^_]+__)|(\*[^*\s](?:[^*]*[^*\s])?\*)|((?<![A-Za-z0-9])_[^_\s](?:[^_]*[^_\s])?_(?![A-Za-z0-9]))|(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]])|((?<![\w@])@[A-Za-z0-9][A-Za-z0-9._-]*)/g;
 
 function renderInline(text: string, ctx: MentionCtx): React.ReactNode[] {
   const out: React.ReactNode[] = [];

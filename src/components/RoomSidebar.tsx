@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
 import { Button } from "@mind-studio/ui";
+import { useMemo } from "react";
+import type { ChatMessage, RoomMeta } from "@/lib/solid/chat";
+import { shortName } from "@/lib/util/format";
+import { computeParticipants } from "@/lib/util/participants";
 import { Avatar } from "./Avatar";
 import { InvitePanel } from "./InvitePanel";
 import { MemberList } from "./MemberList";
-import { shortName } from "@/lib/util/format";
-import { computeParticipants } from "@/lib/util/participants";
-import type { ChatMessage, RoomMeta } from "@/lib/solid/chat";
 
 export function RoomSidebar({
   meta,
@@ -52,7 +52,9 @@ export function RoomSidebar({
       <div className="flex-1 overflow-y-auto px-5 py-4">
         <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-[color:var(--text-faint)]">
           <span>members</span>
-          <span className="text-[color:var(--cyan)]">{participants.length.toString().padStart(2, "0")}</span>
+          <span className="text-[color:var(--cyan)]">
+            {participants.length.toString().padStart(2, "0")}
+          </span>
         </div>
         {isOwner && onInvite ? (
           <div className="mb-3">
