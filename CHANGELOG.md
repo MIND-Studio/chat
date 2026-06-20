@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/MIND-Studio/chat/compare/v0.2.0...v0.3.0) (2026-06-20)
+
+
+### Features
+
+* adopt ui ^0.4.0 fonts + core ^0.7.0 login accent ([#11](https://github.com/MIND-Studio/chat/issues/11)) ([266568e](https://github.com/MIND-Studio/chat/commit/266568efc068a30eea6d18390c167b576c43d724))
+
 ## [0.2.0](https://github.com/MIND-Studio/chat/compare/v0.1.8...v0.2.0) (2026-06-11)
 
 
