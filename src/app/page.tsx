@@ -45,7 +45,6 @@ export default function HomePage() {
       <MindLoginCard
         appName={APP_NAME}
         defaultIssuer={oidcIssuer}
-        accent="var(--primary)"
         onLogin={async ({ issuer }) => {
           await signIn(issuer);
         }}

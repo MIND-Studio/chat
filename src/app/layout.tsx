@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { Fraunces, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeShell } from "@/components/theme-shell";
+
+// Mind theme's font axis (ui 0.4.0) reads these CSS vars off <html>.
+const display = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
+const body = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-hanken", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jb", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Mind Chat",
@@ -18,7 +24,11 @@ const THEME_INIT = `(function(){try{var b=localStorage.getItem("chat:brand");if(
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
