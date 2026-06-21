@@ -1,6 +1,7 @@
 "use client";
 
 import { MindLoginCard, writeLastIdentity } from "@mind-studio/core";
+import { Logo } from "@mind-studio/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -34,9 +35,7 @@ export default function HomePage() {
           <span className="inline-block size-1.5 rounded-full bg-[color:var(--cyan)] shadow-[0_0_8px_var(--cyan-glow)]" />
           solid · ws2023 · long-chat
         </div>
-        <h1 className="text-5xl font-semibold tracking-tight">
-          mind<span className="text-[color:var(--cyan)]">/</span>chat
-        </h1>
+        <Logo label="Chat" />
         <p className="mt-4 max-w-xl text-base text-[color:var(--text-muted)]">
           Messages live in your pod. Real-time delivery via WebSocketChannel2023. No chat server.
         </p>
