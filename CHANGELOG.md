@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/MIND-Studio/chat/compare/v0.3.0...v0.4.0) (2026-06-21)
+
+
+### Features
+
+* adopt brand lockup + canonical icons (ui[#29](https://github.com/MIND-Studio/chat/issues/29) wave 2) ([#15](https://github.com/MIND-Studio/chat/issues/15)) ([79e8ff5](https://github.com/MIND-Studio/chat/commit/79e8ff59a27d01521cbc8bf34cadf94ec49aa124))
+
 ## [0.3.0](https://github.com/MIND-Studio/chat/compare/v0.2.0...v0.3.0) (2026-06-20)
 
 
