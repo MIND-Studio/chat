@@ -48,13 +48,16 @@ function describe(state: ConnState): {
   ringClass?: string;
 } {
   switch (state) {
+    // Colors route through brand tokens: the accent (`--cyan` aliases
+    // `--primary`) for linking, charts for live/polling, destructive for
+    // offline — so they follow Mind by default and the deepspace opt-in.
     case "connecting":
-      return { color: "#5ce1ff", label: "linking", dotClass: "", ringClass: "spin-ring" };
+      return { color: "var(--cyan)", label: "linking", dotClass: "", ringClass: "spin-ring" };
     case "connected":
-      return { color: "#6cf0a0", label: "live", dotClass: "pulse-green" };
+      return { color: "var(--chart-1)", label: "live", dotClass: "pulse-green" };
     case "polling":
-      return { color: "#ffce6b", label: "polling", dotClass: "" };
+      return { color: "var(--chart-4)", label: "polling", dotClass: "" };
     case "error":
-      return { color: "#ff7a85", label: "offline", dotClass: "" };
+      return { color: "var(--destructive)", label: "offline", dotClass: "" };
   }
 }
