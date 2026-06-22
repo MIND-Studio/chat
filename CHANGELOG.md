@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/MIND-Studio/chat/compare/v0.4.0...v0.5.0) (2026-06-22)
+
+
+### Features
+
+* **theme:** default to Mind brand and route status colors through tokens ([f0d0f8c](https://github.com/MIND-Studio/chat/commit/f0d0f8c55120abf83b46df3e05fa2f2261fd64bf))
+
 ## [0.4.0](https://github.com/MIND-Studio/chat/compare/v0.3.0...v0.4.0) (2026-06-21)
 
 
